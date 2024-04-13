@@ -8,17 +8,62 @@
 #   with-sources: false
 
 -e file:.
+anyio==4.3.0
+    # via httpx
+certifi==2024.2.2
+    # via httpcore
+    # via httpx
+click==8.1.7
+    # via typer
 colorama==0.4.6
+    # via click
     # via loguru
+    # via logzero
+environs==9.5.0
+    # via set-loglevel
+exceptiongroup==1.2.0
+    # via anyio
+h11==0.14.0
+    # via httpcore
+httpcore==1.0.5
+    # via httpx
+httpx==0.27.0
+    # via deeplx-tr
+idna==3.6
+    # via anyio
+    # via httpx
 loguru==0.7.2
     # via deeplx-tr
+logzero==1.7.0
+    # via set-loglevel
 markdown-it-py==3.0.0
     # via rich
+marshmallow==3.21.1
+    # via environs
 mdurl==0.1.2
     # via markdown-it-py
+packaging==24.0
+    # via marshmallow
 pygments==2.17.2
     # via rich
+pyperclip==1.8.2
+    # via deeplx-tr
+python-dotenv==1.0.1
+    # via environs
 rich==13.7.1
     # via deeplx-tr
+    # via typer
+set-loglevel==0.1.2
+    # via deeplx-tr
+shellingham==1.5.4
+    # via typer
+sniffio==1.3.1
+    # via anyio
+    # via httpx
+typer==0.12.3
+    # via deeplx-tr
+typing-extensions==4.11.0
+    # via anyio
+    # via typer
 win32-setctime==1.1.0
     # via loguru

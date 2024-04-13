@@ -1,5 +1,5 @@
 [project]
-name = "deeplx_tr"
+name = "deeplx-tr"
 version = "0.1.0a0"
 description = " TODO "
 authors = [
@@ -11,6 +11,10 @@ repository = "https://github.com/ffreemt/deeplx-tr"
 dependencies = [
     "loguru>=0.7.2",
     "rich>=13.7.1",
+    "typer>=0.12.1",
+    "httpx>=0.27.0",
+    "pyperclip>=1.8.2",
+    "set_loglevel>=0.1.2",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
@@ -28,6 +32,7 @@ dev-dependencies = [
     "pytest>=8.1.1",
     "ipython>=8.12.3",
     "ruff>=0.3.5",
+    "pytest-asyncio>=0.23.6",
 ]
 
 [tool.hatch.metadata]
@@ -38,7 +43,9 @@ packages = ["src/deeplx_tr"]
 
 [tool.pytest.ini_options]
 minversion = "6.0"
-addopts = "-ra -q --doctest-modules"
+# addopts = "-ra -q --doctest-modules -s"
+addopts = "-ra -q --doctest-modules -s -p no:warnings"
+
 log_cli = true
 testpaths = [
     "tests",

@@ -143,3 +143,4 @@ links/
 node_modules
 .ruff_cache
 .yarn
+.pnp.cjs
