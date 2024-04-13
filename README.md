@@ -55,7 +55,7 @@ print(res)
 # 'Hallo Welt'
 
 # if you host your own deeplx, for example, at `127.0.0.1:1188'
-# res = deeplx_client("hello world", utl="http://127.0.0.1:1188/translate")
+# res = deeplx_client("hello world", url="http://127.0.0.1:1188/translate")
 ```
 
 An async client is also available, e.g.
@@ -63,11 +63,14 @@ An async client is also available, e.g.
 import asyncio
 from deeplx_tr import deeplx_client_async
 
-res = asyncio.run(
-  asyncio.gather(deeplx_client_async("hello world"), deeplx_client_async("test")
-)
+async def main():
+  res = await asyncio.gather(deeplx_client_async("hello world"), deeplx_client_async("test"))
+  print(res)
+
+asyncio.run(main())
+# ['哈罗世界', '测试']
 ```
-The default concurrency limit is 5 but can be altered by setting the environ variable CONCURRENCY_LIMIT, e.g.
+The default concurrency limit is `5` but can be altered by setting the environ variable CONCURRENCY_LIMIT, e.g.
 ```
 set CONCURRENCY_LIMIT=8  # in Windows
 
