@@ -1,6 +1,6 @@
 [project]
 name = "deeplx-tr"
-version = "0.1.0a0"
+version = "0.1.0a1"
 description = " TODO "
 authors = [
     { name = "ffreemt" }
