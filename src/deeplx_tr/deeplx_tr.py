@@ -147,7 +147,7 @@ def deeplx_tr(
         return {"data": ""}
 
     if source_lang not in lang_list:
-        source_lang = None
+        source_lang = "auto"
     if target_lang not in lang_list:
         if source_lang not in ["zh"]:
             target_lang = "zh"
@@ -155,11 +155,11 @@ def deeplx_tr(
             target_lang = "en"
 
     post_data = init_data(source_lang, target_lang)
-    text = {
+    text_ = {
         "text": translate_text,
         # "requestAlternatives": 3,
     }
-    post_data["params"]["texts"] = [text]
+    post_data["params"]["texts"] = [text_]
     post_data["params"]["timestamp"] = get_timestamp(get_i_count(translate_text))
     post_str = json.dumps(post_data)
     if (post_data["id"] + 5) % 29 == 0 or (post_data["id"] + 3) % 13 == 0:
@@ -222,12 +222,12 @@ def main(
         "zh", "--to-lang", "-t", help="Target language."
     ),
 ):
-    rf"""
+    """
     deeplx in plain python.
 
     supported languages: {lang_list}
 
-    set LOGURU_LEVEL=DEBUG or set LOGLEVEL=10 to turn on debug/verbose mode.
+    set LOGURU_LEVEL=DEBUG or set LOGLEVEL=10 to turn on debug|verbose mode.
     """
     logger.debug(["text", "clipb", "from_lang", "to_lang"])
     logger.debug(text)

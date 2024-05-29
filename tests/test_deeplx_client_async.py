@@ -9,7 +9,7 @@ from loguru import logger
 
 pytestmark = pytest.mark.asyncio
 
-async def test_deeplx_client_asycn():
+async def test_deeplx_client_async():
     """Test deeplx_client_async."""
     _ = await cl("Test")
     logger.info(_)

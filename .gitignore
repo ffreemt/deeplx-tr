@@ -144,3 +144,5 @@ node_modules
 .ruff_cache
 .yarn
 .pnp.cjs
+quick-test-batch_tr.bat
+run-batch_tr.py

@@ -25,6 +25,8 @@ colorama==0.4.6
     # via pytest
 decorator==5.1.1
     # via ipython
+diskcache==5.6.3
+    # via deeplx-tr
 environs==9.5.0
     # via set-loglevel
 exceptiongroup==1.2.0
@@ -59,6 +61,8 @@ matplotlib-inline==0.1.6
     # via ipython
 mdurl==0.1.2
     # via markdown-it-py
+nest-asyncio==1.6.0
+    # via deeplx-tr
 packaging==24.0
     # via marshmallow
     # via pytest
@@ -76,6 +80,8 @@ pygments==2.17.2
 pyperclip==1.8.2
     # via deeplx-tr
 pytest==8.1.1
+    # via pytest-asyncio
+pytest-asyncio==0.23.7
 python-dotenv==1.0.1
     # via environs
 rich==13.7.1
@@ -108,3 +114,4 @@ wcwidth==0.2.13
     # via prompt-toolkit
 win32-setctime==1.1.0
     # via loguru
+ycecream==1.3.17

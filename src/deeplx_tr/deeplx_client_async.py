@@ -23,24 +23,23 @@ from typing import Union
 import httpx
 from loguru import logger
 
-deeplx_url = "https://api.deeplx.org/translate"
-client = httpx.AsyncClient()
+import nest_asyncio
+nest_asyncio.apply()
+
+deeplx_url = "https://api.deeplx.org"
+client = httpx.AsyncClient(verify=False)
 
 CONCURRENCY_LIMIT = 5
-try:
-    _ = str(CONCURRENCY_LIMIT)
-    _ = int(os.getenv("CONCURRENCY_LIMIT", _))
-    _ = max(_, 1)  # set to 1 if negative or 0
-except (TypeError, ValueError) as exc:
-    logger.trace(
-        f"env var CONCURRENCY_LIMIT not set or is invalid: {exc}, "
-        "setting CONCURRENCY_LIMIT to 5"
-    )
-    _ = CONCURRENCY_LIMIT
-# override if env var os.getenv("CONCURRENCY_LIMIT" is properly set
-CONCURRENCY_LIMIT = _
+_ = os.getenv("CONCURRENCY_LIMIT")
+if _ is not None:
+    try:
+        CONCURRENCY_LIMIT = int(os.getenv("CONCURRENCY_LIMIT"))  # type: ignore
+    except (TypeError, ValueError):
+        ...  # default 5 as above
+    if CONCURRENCY_LIMIT < 1:
+        CONCURRENCY_LIMIT = 5  # if < 1, set to 5
 
-semaphore = asyncio.Semaphore(CONCURRENCY_LIMIT)
+SEMAPHORE = asyncio.Semaphore(CONCURRENCY_LIMIT)
 
 
 async def deeplx_client_async(
@@ -49,6 +48,7 @@ async def deeplx_client_async(
     target_lang: str = "",
     alternatives: bool = False,
     url: Union[str, None] = None,
+    sem = SEMAPHORE,
 ) -> str:
     """
     Translate via api.deeplx.org and variants.
@@ -64,6 +64,7 @@ async def deeplx_client_async(
     target_lang: default zh (chinese)
     alternatives: also output available alternatives if set (default False)
     url: deeplx api url, default https://api.deeplx.org/translate
+    sem: semaphore, default 5
 
     Returns:
     -------
@@ -72,18 +73,22 @@ async def deeplx_client_async(
     """
     # url = deeplx_url
     # if os.getenv("DEEPLX_URL") is not None:
+
     if url is None:
         url = deeplx_url
     else:
         try:
             url = url.strip()
         except Exception:
-            logger.warning("Unable to process {url=}, setting to ''.")
-            url = ""
+            logger.warning(f"Unable to process {url=}, setting to {deeplx_url}.")
+            url = deeplx_url
 
     url = url or os.getenv("DEEPLX_URL")
 
-    assert url, f"{url=}, url must not be empty or None"
+    # assert url, f"{url=}, url must not be empty or None"
+    if not url:
+        logger.warning(f" {url=}, setting to {deeplx_url}")
+        url = deeplx_url
 
     try:
         text = str(text).strip()
@@ -140,21 +145,30 @@ async def deeplx_client_async(
     )
 
     logger.trace(f"{data=}")
+    logger.trace(f"url = {url}/translate")
 
-    async with semaphore:
+    # async with semaphore:
+    if True:
+    # async with sem:
         try:
-            resp = await client.post(url, json=data)  # type: ignore
+            resp = await client.post(f"{url}/translate", json=data)  # type: ignore
             resp.raise_for_status()
         except Exception as exc:
-            logger.error(exc)
+            # will be handled downstream
+            # logger.error(exc)
             raise
+
+    logger.trace(f"{resp=}")
 
     try:
         res = resp.json().get("data")
         alt_output = resp.json().get("alternatives")
     except Exception as exc:
-        logger.error(exc)
+        # will be handled downstream
+        # logger.error(exc)
         raise
+
+    logger.trace(f"{res=}")
 
     if alternatives and alt_output:
         return f"{res} / {', '.join(alt_output)}"
@@ -169,14 +183,14 @@ async def main():
         text = "test"
 
     print(f"{text=}")
-    print(
-        await asyncio.gather(
+    _ = await asyncio.gather(
             deeplx_client_async(text),
-            deeplx_client_async("hello world"),
             deeplx_client_async(text, alternatives=True),
+            deeplx_client_async("hello world"),
             deeplx_client_async("hello world", alternatives=True),
+            return_exceptions=True,
         )
-    )
+    print(_)
 
 
 if __name__ == "__main__":

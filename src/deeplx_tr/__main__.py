@@ -62,7 +62,7 @@ def main(
         "zh", "--to-lang", "-t", help="Target language."
     ),
 ):
-    rf"""
+    r"""
     deeplx translate in plain python.
 
     supported languages: {lang_list}
