@@ -1,4 +1,5 @@
 """Prep __main__.py."""
+
 # pylint: disable=invalid-name
 import os
 import sys
@@ -30,7 +31,9 @@ app = typer.Typer(
 
 def _version_callback(value: bool) -> None:
     if value:
-        typer.echo(f"{app.info.name} v.{__version__} -- supported languages: {lang_list}")
+        typer.echo(
+            f"{app.info.name} v.{__version__} -- supported languages: {lang_list}"
+        )
         raise typer.Exit()
 
 
@@ -94,7 +97,10 @@ def main(
     # ic(text_str)
 
     if not text_str:
-        _ = "Either supply some text from the terminal or set -c (--clipb) to translate clipboard content (make sure the clipboard is not empty)."
+        _ = (
+            "Either supply some text from the terminal or set -c (--clipb) "
+            "to translate clipboard content (make sure the clipboard is not empty)."
+        )
         msg = typer.style(_, fg=typer.colors.GREEN, bold=True)
         typer.echo(msg)
         _ = input("Press Enter to continue...")

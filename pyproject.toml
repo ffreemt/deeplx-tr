@@ -17,6 +17,9 @@ dependencies = [
     "set_loglevel>=0.1.2",
     "nest-asyncio>=1.6.0",
     "diskcache>=5.6.3",
+    "loadtext>=0.0.3",
+    "pyquery>=2.0.0",
+    "openai>=1.35.3",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

@@ -1,7 +1,7 @@
 # Assume Python 3.10.
 target-version = "py310"
 # Decrease the maximum line length to 79 characters.
-line-length = 300
+# line-length = 300
 
 # pyflakes, pycodestyle, isort
 # flake8 YTT, pydocstyle D, pylint PLC
