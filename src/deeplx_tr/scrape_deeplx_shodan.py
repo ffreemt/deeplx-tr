@@ -257,14 +257,9 @@ async def main():
     url_list = list(_)
 
     # append extra sites to check
-    extra_urls = [
-        # "https://translates.me/v2",
-        # "https://api.deeplx.org/linxdo_key",  # from https://connect.linux.do/
-        "http://142.171.18.103:8001",
-    ]
-    # extra_urls = ["https://api.deeplx.org"]
 
     # quick scrape deeplx.wangwangit.com
+    extra_urls = []
     for _ in range(3):
         try:
             res = httpx.get(
@@ -291,7 +286,21 @@ async def main():
             "Tried 3 times, deepl.wangwangit.com probably down or blocked this ip."
         )
 
-    console.print(f"{extra_urls[:3]=}")
+    _ = [
+        # "https://translates.me/v2",
+        # "https://api.deeplx.org/linxdo_key",  # from https://connect.linux.do/
+        "https://deeplx.niubipro.com",
+        "https://freedeeplxapi1.ddl.us.kg",
+        "https://ihabis-deeplx-test2-no-token.hf.space",
+        "https://wuran-deeplx.hf.space",
+        "https://mikeee-deeplx.hf.space",
+        "https://deeplx.dattw.eu.org",
+    ]
+    # extra_urls = ["https://api.deeplx.org"]
+
+    extra_urls.extend(_)
+
+    console.print(f"{extra_urls=}")
 
     for elm in extra_urls:
         if elm not in url_list:

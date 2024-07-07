@@ -6,6 +6,7 @@ cache = diskcache.Cache(Path.home() / ".diskcache" / "deeplx-sites")
 # reverse, prepare for deq[-1] and deq.rotate
 deq = deque([url for url, deplay in cache.get("deeplx-sites")[::-1]]
 """
+# pylint: disable=too-many-branches, too-many-statements
 import asyncio
 from collections import deque
 from pathlib import Path
@@ -38,7 +39,9 @@ async def cache_incr(item, idx, inc=1):
     await loop.run_in_executor(None, cache.set, item, _)
 
 
-async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Union[str, BaseException]]]:
+async def worker(
+    queue, deq, wid=-1, queue_tr=asyncio.Queue()
+) -> List[List[Union[str, BaseException]]]:
     """
     Translate text in the queue.
 
@@ -46,16 +49,16 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
     ----
     queue: asyncio.Queue that contains list of texts
     deq: collections.deque to hold deeplx urls
-    id: identifier
+    wid: identifier
     queue_tr: common queue for all workers to store trtext and for stop condition
 
     url: deeplx site's url from a deque
 
     """
-    # asign a random id by default
-    if id < 0:
+    # asign a random wid by default
+    if wid < 0:
         randrange(1000)
-    logger.trace(f"******** {id=}")
+    logger.trace(f"******** {wid=}")
     trtext_list = []
 
     # while not queue.empty():
@@ -63,13 +66,13 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
     n_attempts = queue.qsize()
     n_texts = n_attempts
 
-    logger.trace(f"{n_attempts=} {id=}")
+    logger.trace(f"{n_attempts=} {wid=}")
 
     _ = """
     for _ in range(n_attempts):
-        logger.trace(f"attemp {_ + 1}  {id=} ")
+        logger.trace(f"attemp {_ + 1}  {wid=} ")
         if queue.empty():
-            logger.trace(f" queue empty, done {id=} ")
+            logger.trace(f" queue empty, done {wid=} ")
             break
 
         try:
@@ -101,11 +104,11 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
 
             # httpx.HTTPStatusError
             try:
-                logger.trace(f" try deeplx_client_async {text=} {id=}")
+                logger.trace(f" try deeplx_client_async {text=} {wid=}")
                 trtext = await deeplx_client_async(text, url=url)
-                logger.trace(f" done deeplx_client_async {text=} {id=}")
+                logger.trace(f" done deeplx_client_async {text=} {wid=}")
             except Exception as exc:
-                logger.trace(f"{exc=}, {id=}")
+                logger.trace(f"{exc=}, {wid=}")
                 # raise
                 trtext = exc  # for retry in the subsequent round
 
@@ -116,28 +119,28 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
                 except Exception: # maybe another worker already did
                     ...
             finally:
-                logger.trace(f" {trtext=}  {id=} ")
+                logger.trace(f" {trtext=}  {wid=} ")
                 queue.task_done()
-                logger.trace(f"\n\t >>====== que.task_done()  {id=}")
+                logger.trace(f"\n\t >>====== que.task_done()  {wid=}")
 
                 # put text back in the queue if Exception
                 if isinstance(trtext, Exception):
                     logger.info(f" {seqno=} failed {trtext=}, back to the queue")
                     await queue.put((seqno, text))
-                    await cache_incr("workers_fail", id)
+                    await cache_incr("workers_fail", wid)
                 else:
                     # text not empty but text.strip() empty, try gain
                     if text.strip() and not trtext.strip():
                         logger.info(f" {seqno=} empty trtext, back to the queue")
                         # try again if trtext empty
                         await queue.put((seqno, text))
-                        await cache_incr("workers_emp", id)
+                        await cache_incr("workers_emp", wid)
                     else:
                         logger.info(f" {seqno=} done ")
                         trtext_list.append((seqno, trtext))
-                        await cache_incr("workers_succ", id)
+                        await cache_incr("workers_succ", wid)
     else:
-        logger.trace(f" max attempts reached {id=}")
+        logger.trace(f" max attempts reached {wid=}")
     # """
 
     then = monotonic()
@@ -160,7 +163,7 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
             else:
                 text = str(seqno_text)
                 seqno = -1
-        except asyncio.QueueEmpty as exc:
+        except asyncio.QueueEmpty:
             # logger.info(f"Currently no items in the queue: {exc}")
             await asyncio.sleep(0.1)
             continue  # other worker may fail and put back items to the queue
@@ -177,11 +180,11 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
 
         # httpx.HTTPStatusError
         try:
-            logger.trace(f" try deeplx_client_async {text=} {id=}")
+            logger.trace(f" try deeplx_client_async {text=} {wid=}")
             trtext = await deeplx_client_async(text, url=url)
-            logger.trace(f" done deeplx_client_async {text=} {id=}")
+            logger.trace(f" done deeplx_client_async {text=} {wid=}")
         except Exception as exc:
-            logger.trace(f"{exc=}, {id=}")
+            logger.trace(f"{exc=}, {wid=}")
             # raise
             trtext = exc  # for retry in the subsequent round
 
@@ -189,39 +192,39 @@ async def worker(queue, deq, id=-1, queue_tr = asyncio.Queue()) -> List[List[Uni
             try:
                 # DEQ.remove(url)
                 ...
-            except Exception: # maybe another worker already did DEQ.remove(url)
+            except Exception:  # maybe another worker already did DEQ.remove(url)
                 ...
         finally:
-            logger.trace(f" {trtext=}  {id=} ")
+            logger.trace(f" {trtext=}  {wid=} ")
             queue.task_done()
-            logger.trace(f"\n\t >>====== que.task_done()  {id=}")
+            logger.trace(f"\n\t >>====== que.task_done()  {wid=}")
 
             # put text back in the queue if Exception
             if isinstance(trtext, Exception):
-                logger.trace(f"{id=} {seqno=} failed {trtext=}, back to the queue")
+                logger.trace(f"{wid=} {seqno=} failed {trtext=}, back to the queue")
                 await queue.put((seqno, text))
-                await cache_incr("workers_fail", id)
-                await asyncio.sleep(.1)  # give other workers a chance to try
+                await cache_incr("workers_fail", wid)
+                await asyncio.sleep(0.1)  # give other workers a chance to try
             else:
                 # text not empty but text.strip() empty, try gain
                 if text.strip() and not trtext.strip():
-                    logger.trace(f"{id=} {seqno=} empty trtext, back to the queue")
+                    logger.trace(f"{wid=} {seqno=} empty trtext, back to the queue")
                     # try again if trtext empty
                     await queue.put((seqno, text))
-                    await cache_incr("workers_emp", id)
+                    await cache_incr("workers_emp", wid)
                     await asyncio.sleep(0.1)
                 else:
-                    logger.info(f"{id=} {seqno=} done ")
+                    logger.info(f"{wid=} {seqno=} done ")
                     trtext_list.append((seqno, trtext))
                     await queue_tr.put((seqno, trtext))
-                    await cache_incr("workers_succ", id)
+                    await cache_incr("workers_succ", wid)
 
-    logger.trace(f"\n\t {trtext_list=}, {id=} fini")
+    logger.trace(f"\n\t {trtext_list=}, {wid=} fini")
 
     return trtext_list
 
 
-async def batch_tr(texts: List[str], n_workers: int = 4):
+async def batch_deepl_tr(texts: List[str], n_workers: int = 4):
     """
     Translate in batch using urls from deq.
 
@@ -250,8 +253,7 @@ async def batch_tr(texts: List[str], n_workers: int = 4):
         n_workers = len(texts) // 2
 
     # cap to len(texts)
-    if n_workers > len(texts):
-        n_workers = len(texts)
+    n_workers = min(n_workers, len(texts))
 
     logger.info(f"{n_workers=}")
 
@@ -322,5 +324,5 @@ async def batch_tr(texts: List[str], n_workers: int = 4):
 
 
 if __name__ == "__main__":
-    _ = asyncio.run(batch_tr(['test 123', 'test abc ']))
+    _ = asyncio.run(batch_tr(["test 123", "test abc "]))
     print(_)

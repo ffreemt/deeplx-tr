@@ -12,6 +12,7 @@ lint.select = ["F", "E", "W", "I001", "YTT", "D", "PLC"]
 # D101 Missing docstring in public class
 # `multi-line-summary-first-line` (D212)
 # `one-blank-line-before-class` (D203)
-lint.extend-ignore = ["D103", "D101", "D212", "D203"]
+# E501 Line too long
+lint.extend-ignore = ["D103", "D101", "D212", "D203", "E501"]
 
 exclude = [".venv"]

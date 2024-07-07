@@ -8,18 +8,31 @@
 #   with-sources: false
 
 -e file:.
+aiohttp==3.9.5
+    # via langchain
+aiosignal==1.3.1
+    # via aiohttp
 annotated-types==0.7.0
     # via pydantic
 anyio==4.3.0
     # via httpx
     # via openai
+astroid==3.2.2
+    # via pylint
 asttokens==2.4.1
     # via stack-data
+async-timeout==4.0.3
+    # via aiohttp
+    # via langchain
+attrs==23.2.0
+    # via aiohttp
 certifi==2024.2.2
     # via httpcore
     # via httpx
+    # via requests
 charset-normalizer==3.3.2
     # via loadtext
+    # via requests
 click==8.1.7
     # via typer
 colorama==0.4.6
@@ -27,12 +40,15 @@ colorama==0.4.6
     # via ipython
     # via loguru
     # via logzero
+    # via pylint
     # via pytest
     # via tqdm
 cssselect==1.2.0
     # via pyquery
 decorator==5.1.1
     # via ipython
+dill==0.3.8
+    # via pylint
 diskcache==5.6.3
     # via deeplx-tr
 distro==1.9.0
@@ -45,6 +61,11 @@ exceptiongroup==1.2.0
     # via pytest
 executing==2.0.1
     # via stack-data
+frozenlist==1.4.1
+    # via aiohttp
+    # via aiosignal
+greenlet==3.0.3
+    # via sqlalchemy
 h11==0.14.0
     # via httpcore
 httpcore==1.0.5
@@ -55,61 +76,117 @@ httpx==0.27.0
 idna==3.6
     # via anyio
     # via httpx
+    # via requests
+    # via yarl
 iniconfig==2.0.0
     # via pytest
 ipython==8.23.0
+isort==5.13.2
+    # via pylint
 jedi==0.19.1
     # via ipython
+jsonpatch==1.33
+    # via langchain-core
+jsonpointer==3.0.0
+    # via jsonpatch
+langchain==0.2.6
+    # via deeplx-tr
+langchain-core==0.2.11
+    # via langchain
+    # via langchain-openai
+    # via langchain-text-splitters
+langchain-openai==0.1.14
+    # via deeplx-tr
+langchain-text-splitters==0.2.2
+    # via langchain
+langsmith==0.1.83
+    # via langchain
+    # via langchain-core
 loadtext==0.0.3
     # via deeplx-tr
 loguru==0.7.2
     # via deeplx-tr
     # via loadtext
+    # via python-run-cmd
 logzero==1.7.0
     # via set-loglevel
 lxml==5.2.2
     # via pyquery
+    # via python-docx
 markdown-it-py==3.0.0
     # via rich
 marshmallow==3.21.1
     # via environs
 matplotlib-inline==0.1.6
     # via ipython
+mccabe==0.7.0
+    # via pylint
 mdurl==0.1.2
     # via markdown-it-py
+multidict==6.0.5
+    # via aiohttp
+    # via yarl
 nest-asyncio==1.6.0
     # via deeplx-tr
+numpy==1.26.4
+    # via langchain
 openai==1.35.3
     # via deeplx-tr
+    # via langchain-openai
+orjson==3.10.6
+    # via langsmith
 packaging==24.0
+    # via langchain-core
     # via marshmallow
     # via pytest
 parso==0.8.4
     # via jedi
-pluggy==1.4.0
+platformdirs==4.2.2
+    # via pylint
+pluggy==1.5.0
     # via pytest
 prompt-toolkit==3.0.43
     # via ipython
 pure-eval==0.2.2
     # via stack-data
 pydantic==2.7.4
+    # via langchain
+    # via langchain-core
+    # via langsmith
     # via openai
 pydantic-core==2.18.4
     # via pydantic
 pygments==2.17.2
     # via ipython
     # via rich
+pylint==3.2.4
 pyperclip==1.8.2
     # via deeplx-tr
 pyquery==2.0.0
     # via deeplx-tr
-pytest==8.1.1
+pytest==8.2.2
     # via pytest-asyncio
+    # via pytest-timeout
 pytest-asyncio==0.23.7
+pytest-timeout==2.3.1
+python-docx==1.1.2
+    # via deeplx-tr
 python-dotenv==1.0.1
+    # via deeplx-tr
     # via environs
+python-run-cmd==0.1.1
+pyyaml==6.0.1
+    # via langchain
+    # via langchain-core
+regex==2024.5.15
+    # via tiktoken
+requests==2.32.3
+    # via langchain
+    # via langsmith
+    # via tiktoken
 rich==13.7.1
     # via deeplx-tr
+    # via python-run-cmd
     # via typer
 ruff==0.3.5
 set-loglevel==0.1.2
@@ -122,10 +199,20 @@ sniffio==1.3.1
     # via anyio
     # via httpx
     # via openai
+sqlalchemy==2.0.31
+    # via langchain
 stack-data==0.6.3
     # via ipython
+tenacity==8.4.2
+    # via langchain
+    # via langchain-core
+tiktoken==0.7.0
+    # via langchain-openai
 tomli==2.0.1
+    # via pylint
     # via pytest
+tomlkit==0.12.5
+    # via pylint
 tqdm==4.66.4
     # via openai
 traitlets==5.14.2
@@ -135,13 +222,20 @@ typer==0.12.3
     # via deeplx-tr
 typing-extensions==4.11.0
     # via anyio
+    # via astroid
     # via ipython
     # via openai
     # via pydantic
     # via pydantic-core
+    # via python-docx
+    # via sqlalchemy
     # via typer
+urllib3==2.2.2
+    # via requests
 wcwidth==0.2.13
     # via prompt-toolkit
 win32-setctime==1.1.0
     # via loguru
+yarl==1.9.4
+    # via aiohttp
 ycecream==1.3.17

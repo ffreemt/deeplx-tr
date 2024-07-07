@@ -1,4 +1,6 @@
 """
+Collect all models for newapi @acone:3001 in one place.
+
 Use from pkgutil import resolve_name
 resolve_name("newapi_models:newapi_models")
 
@@ -9,7 +11,14 @@ import diskcache
 
 cache = diskcache.Cache(Path.home() / ".diskcache" / "newapi-tr")
 
+# str or tuple, tuple is hashable, to collect stats (defaultdict) later on
 models = [
+    ("gpt-3.5-turbo", "https://duck2api-lovat.vercel.app", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://duck2api-u3l3laz3.b4a.run", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://mikeee-duck2api.hf.space/hf", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://sun-i-duck2api.hf.space", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://Raimbault-duck2api.hf.space", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://gyxz-duck2api.hf.space", "YourAPIKey"),
     # google cloud run test
     "gpt-3.5-turbo-grun",
     "gpt-4o-grun",
@@ -29,6 +38,16 @@ models = [
     # "llama-3-70b-d2a",
     # "mixtral-8x7b-d2a",
 ]
+
+# redteam qwen hf
+models += ['qwen-turbo-hf',
+ 'qwen-max-hf',
+ 'qwen-max-longcontext-hf',
+ 'qwen-plus-hf',
+ 'qwen-vl-max-hf',
+ 'qwen-vl-plus-hf',
+ 'qwen-v1-hf',
+ 'qwen-v1-vision-hf']
 
 # curl -XPOST https://mikeee-reka.hf.space/hf/v1/chat/completions -H "Authorization: Bearer 316287378"  -H "Content-Type: application/json" --data "{\"model\": \"reka-core\", \"messages\": [{\"role\": \"user\", \"content\": \"Say this is a test!\"}]}"
 # newapi at acone via mikeee-reka.hf.space free reka.ai

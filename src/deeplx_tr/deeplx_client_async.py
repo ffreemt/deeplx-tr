@@ -14,16 +14,16 @@ curl -X POST https://api.deeplx.org/translate -d '{
 example return:
 {"code":200,"id":865910002,"data":"你好，世界","alternatives":["世界，你好","你好，世界！","大家好"]}
 """
-# pylint: disable=invalid-name,too-many-branches, too-many-statements
+# pylint: disable=invalid-name,too-many-branches, too-many-statements, too-many-arguments
 import asyncio
 import os
 import sys
 from typing import Union
 
 import httpx
+import nest_asyncio
 from loguru import logger
 
-import nest_asyncio
 nest_asyncio.apply()
 
 deeplx_url = "https://api.deeplx.org"
@@ -48,7 +48,7 @@ async def deeplx_client_async(
     target_lang: str = "",
     alternatives: bool = False,
     url: Union[str, None] = None,
-    sem = SEMAPHORE,
+    # sem=SEMAPHORE,
 ) -> str:
     """
     Translate via api.deeplx.org and variants.
@@ -138,25 +138,25 @@ async def deeplx_client_async(
     if source_lang == target_lang:
         return text
 
-    data = dict(
-        text=text,
-        source_lang=source_lang,
-        target_lang=target_lang,
-    )
+    data = {
+        "text": text,
+        "source_lang": source_lang,
+        "target_lang": target_lang,
+    }
 
     logger.trace(f"{data=}")
     logger.trace(f"url = {url}/translate")
 
     # async with semaphore:
-    if True:
+    # if True:
     # async with sem:
-        try:
-            resp = await client.post(f"{url}/translate", json=data)  # type: ignore
-            resp.raise_for_status()
-        except Exception as exc:
-            # will be handled downstream
-            # logger.error(exc)
-            raise
+    try:
+        resp = await client.post(f"{url}/translate", json=data)  # type: ignore
+        resp.raise_for_status()
+    except Exception as exc:
+        # will be handled downstream
+        logger.error(exc)
+        raise
 
     logger.trace(f"{resp=}")
 
@@ -165,7 +165,7 @@ async def deeplx_client_async(
         alt_output = resp.json().get("alternatives")
     except Exception as exc:
         # will be handled downstream
-        # logger.error(exc)
+        logger.error(exc)
         raise
 
     logger.trace(f"{res=}")
@@ -184,12 +184,12 @@ async def main():
 
     print(f"{text=}")
     _ = await asyncio.gather(
-            deeplx_client_async(text),
-            deeplx_client_async(text, alternatives=True),
-            deeplx_client_async("hello world"),
-            deeplx_client_async("hello world", alternatives=True),
-            return_exceptions=True,
-        )
+        deeplx_client_async(text),
+        deeplx_client_async(text, alternatives=True),
+        deeplx_client_async("hello world"),
+        deeplx_client_async("hello world", alternatives=True),
+        return_exceptions=True,
+    )
     print(_)
 
 

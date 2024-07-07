@@ -1,52 +1,3 @@
-"""
-Translate via newapi api.
-
-also azure openai
-
-"""
-# pylint: disable=too-many-statements, too-many-branches, too-many-arguments
-
-import os
-from collections import deque
-from pathlib import Path
-
-import diskcache
-from dotenv import load_dotenv
-from httpx import Timeout
-from loguru import logger
-
-# from openai import OpenAI, AzureOpenAI
-from openai import AsyncAzureOpenAI, AsyncOpenAI
-from ycecream import y
-
-from deeplx_tr.newapi_models import newapi_models
-
-y.configure(sln=1, rn=1)
-
-# show_line_number/return_none=True, ennale=False, turn y off
-# y.configure(sln=1, rn=1, e=0)
-
-API_VERSION = "2024-03-01-preview"
-
-cache = diskcache.Cache(Path.home() / ".diskcache" / "newapi-tr")
-# cache.set("models", [...])  # somewhere sometime
-
-try:
-    _ = list(cache.get("models"))  # type: ignore
-    if not isinstance(_, (list, tuple)):
-        _ = []
-except:  # noqa  # pylint: disable=bare-except
-    _ = []
-# DEQ = deque(_)
-# DEQ = deque(newapi_models)
-# DEQ = deque(newapi_models[:10])
-
-# models = newapi_models[-10:]
-MODELS = newapi_models[:25]
-DEQ = deque(MODELS)
-
-y(DEQ)
-
 
 async def newapi_tr(
     text: str,
@@ -114,8 +65,6 @@ TEXT: {text}"""
             api_key=api_key,
         )
 
-    completion = ""
-    # _ = """  # this hangs pytest
     completion = await client.chat.completions.create(
         model=model,  # or deployment_name
         messages=[
@@ -126,8 +75,6 @@ TEXT: {text}"""
         ],
         **kw,
     )
-    # """
-
     # print(completion.to_json())
     # print(completion)
 

@@ -26,8 +26,10 @@ filter and sort:
     print('\n'.join(_[0] for _ in valid_lst1))
 filter invalid
     print('\n'.join(_[1] for _ in filter(lambda x: isinstance(x[1], str), lst1)))
+
+# pylint: disable=too-many-branches, too-many-statements
 """
-# pylint: disable=invalid-name, broad-except
+# pylint: disable=invalid-name, broad-except, broad-exception-raised
 # from about_time import about_time
 from time import time
 from typing import Tuple, Union

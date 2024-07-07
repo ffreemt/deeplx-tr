@@ -5,7 +5,7 @@ Supported languages: 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'nl',
   'pl', 'pt', 'ru', 'zh','bg', 'cs', 'da', 'el', 'et', 'fi', 'hu', 'lt',
   'lv', 'ro', 'sk', 'sl', 'sv'
 """
-# pylint: disable=invalid-name, line-too-long
+# pylint: disable=invalid-name, line-too-long, broad-exception-raised
 # pip install set-loglevel loguru icecream httpx pyperclip typer
 # pip install nuitka ordered-set
 import json

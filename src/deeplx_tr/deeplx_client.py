@@ -12,16 +12,24 @@ curl -X POST https://api.deeplx.org/translate -d '{
 example return:
 {"code":200,"id":865910002,"data":"你好，世界","alternatives":["世界，你好","你好，世界！","大家好"]}
 """
+
 # pylint: disable=invalid-name,too-many-branches, too-many-statements
 import os
 import sys
 from typing import Union
 
 import httpx
+from dotenv import load_dotenv
 from loguru import logger
 
-deeplx_url = "https://api.deeplx.org/translate"
+load_dotenv()
+LINUXDO_API_TOKEN = os.getenv("LINUXDO_API_TOKEN")
 
+if LINUXDO_API_TOKEN:
+    deeplx_url = f"https://api.deeplx.org/{LINUXDO_API_TOKEN}/translate"
+else:
+    deeplx_url = "https://deeplx.dattw.eu.org/translate"
+logger.trace(f"{deeplx_url=}")
 
 def deeplx_client(
     text: str,
@@ -111,11 +119,11 @@ def deeplx_client(
     if source_lang == target_lang:
         return text
 
-    data = dict(
-        text=text,
-        source_lang=source_lang,
-        target_lang=target_lang,
-    )
+    data = {
+        "text": text,
+        "source_lang": source_lang,
+        "target_lang": target_lang,
+    }
 
     logger.trace(f"{data=}")
 
