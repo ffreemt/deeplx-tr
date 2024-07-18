@@ -16,9 +16,9 @@ models = [
     ("gpt-3.5-turbo", "https://duck2api-lovat.vercel.app", "YourAPIKey"),
     ("gpt-3.5-turbo", "https://duck2api-u3l3laz3.b4a.run", "YourAPIKey"),
     ("gpt-3.5-turbo", "https://mikeee-duck2api.hf.space/hf", "YourAPIKey"),
-    ("gpt-3.5-turbo", "https://sun-i-duck2api.hf.space", "YourAPIKey"),
-    ("gpt-3.5-turbo", "https://Raimbault-duck2api.hf.space", "YourAPIKey"),
-    ("gpt-3.5-turbo", "https://gyxz-duck2api.hf.space", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://sun-i-duck2api.hf.space/hf", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://Raimbault-duck2api.hf.space/hf", "YourAPIKey"),
+    ("gpt-3.5-turbo", "https://gyxz-duck2api.hf.space/hf", "YourAPIKey"),
     # google cloud run test
     "gpt-3.5-turbo-grun",
     "gpt-4o-grun",

@@ -21,7 +21,7 @@ from ycecream import y
 from deeplx_tr.deeplx_client_async import deeplx_client_async
 
 cache = diskcache.Cache(Path.home() / ".diskcache" / "deeplx-sites")
-_ = cache.get("deeplx-sites")
+_ = cache.get("deeplx-sites") or []  # "or []" takes care of first run
 DEQ = deque([url for url, delay in _[::-1]])  # type: ignore
 
 

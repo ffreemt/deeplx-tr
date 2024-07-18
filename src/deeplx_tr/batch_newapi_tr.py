@@ -146,13 +146,13 @@ async def worker(
             logger.trace(f"{exc=}, {wid=}")
             trtext = exc  # for retry in the subsequent round
 
-            # optinally, remove model from deq_models since it does not deliver
+            # optionally, remove model from deq_models since it does not deliver
             _ = """
             try:
-                # deq_models.remove(model)
+                # deq_models.remove(model_or_3_tuple)
                 ...
             except:  # pylint: disable=broad-except,bare-except  # noqa
-                # maybe another worker already did deq_models.remove(model)
+                # maybe another worker already did deq_models.remove(model_or_3_tuple)
                 ...
             """
         except:  # to make pyright happy  # noqa  # pylint: disable=bare-except
@@ -171,7 +171,7 @@ async def worker(
                 await queue_texts.put((seqno, text))
                 await cache_incr("workers_fail", wid)
 
-                model_use_stats[model]["fail"] += 1
+                model_use_stats[model_or_3_tuple]["fail"] += 1
 
                 await asyncio.sleep(0.1)  # give other workers a chance to try
             else:
@@ -184,7 +184,7 @@ async def worker(
                     await queue_texts.put((seqno, text))
                     await cache_incr("workers_emp", wid)
 
-                    model_use_stats[model]["empty"] += 1
+                    model_use_stats[model_or_3_tuple]["empty"] += 1
 
                     await asyncio.sleep(0.1)
                 else:
@@ -197,7 +197,7 @@ async def worker(
                     await queue_trtexts.put((seqno, trtext))
                     await cache_incr("workers_succ", wid)
 
-                    model_use_stats[model]["succ"] += 1
+                    model_use_stats[model_or_3_tuple]["succ"] += 1
 
     logger.trace(f"\n\t {trtext_list=}, {wid=} fini")
 
