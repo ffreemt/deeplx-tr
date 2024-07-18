@@ -73,6 +73,7 @@ async def cache_incr(item, idx, inc=1):
 async def worker(
     queue_texts,
     deq_models,
+    n_items: int,
     wid: int = -1,
     model_suffix: bool = True,
     queue_trtexts=asyncio.Queue(),
@@ -96,11 +97,27 @@ async def worker(
         wid = randrange(1000)
     if timeout < 0:
         timeout = 30
-    n_items = queue_texts.qsize()
+
+    # n_times: fixed, expected queue_trtexts length
+    # so that workers do not quit too early
+    # n_items = queue_texts.qsize()
+
+    logger.trace(f"{n_items=}, {wid=}")
+    logger.trace(f"{queue_trtexts=}, {wid=}")
+
     then = monotonic()
     trtext_list = []
+    idx = -1
     while True:
+        idx += 1
+        logger.trace(f"\n\t ########## {idx=}, {wid=}")
         if queue_trtexts.qsize() >= n_items or monotonic() - then > timeout * n_items:
+            logger.trace("break on queue_trtexts.qsize() >= n_items or monotonic() - then > timeout * n_items")
+            logger.trace(queue_trtexts.qsize() >= n_items)
+            logger.trace(f"{queue_trtexts.qsize()=}")
+            logger.trace(f"{n_items=}")
+            logger.trace(monotonic() - then > timeout * n_items)
+
             break
         try:
             seqno_text = queue_texts.get_nowait()
@@ -109,6 +126,7 @@ async def worker(
             # there is no need for this 'if', but just to play safe
             if len(seqno_text) == 2:
                 seqno, text = seqno_text
+                logger.trace(f"{seqno=}, {text=}")
             else:
                 text = str(seqno_text)
                 seqno = -1
@@ -121,6 +139,8 @@ async def worker(
 
         # process text, output from queue_texts.get_nowait()
         model_or_3_tuple = deq_models[-1]
+
+        logger.trace(model_or_3_tuple)
 
         # just model
         if isinstance(model_or_3_tuple, str):
@@ -173,7 +193,7 @@ async def worker(
 
                 model_use_stats[model_or_3_tuple]["fail"] += 1
 
-                await asyncio.sleep(0.1)  # give other workers a chance to try
+                await asyncio.sleep(0.01)  # give other workers a chance to try
             else:
                 # text not empty but text.strip() empty, try gain
                 if text.strip() and not trtext.strip():
@@ -186,14 +206,15 @@ async def worker(
 
                     model_use_stats[model_or_3_tuple]["empty"] += 1
 
-                    await asyncio.sleep(0.1)
-                else:
+                    await asyncio.sleep(0.01)
+                else:  # success
                     logger.info(f"{wid=} {seqno=} done ")
 
                     if model_suffix:
                         trtext = f"{trtext} [{model}]"
 
                     trtext_list.append((seqno, trtext))
+
                     await queue_trtexts.put((seqno, trtext))
                     await cache_incr("workers_succ", wid)
 
@@ -232,12 +253,10 @@ async def batch_newapi_tr(
     elif n_workers < 0:
         n_workers = len(texts) // 2
 
-    # cap to len(texts)
-    n_workers = min(n_workers, len(texts))
+    # cap to len(texts) + 1
+    n_workers = min(n_workers, len(texts)) + 1
 
     logger.info(f"{n_workers=}")
-
-    # logger.debug(y(n_workers))
 
     que = asyncio.Queue()
     for idx, text in enumerate(texts):
@@ -249,9 +268,10 @@ async def batch_newapi_tr(
     cache.set("workers_fail", [0] * n_workers)
     cache.set("workers_emp", [0] * n_workers)
 
+    queue_trtexts = asyncio.Queue()  # this seems necessary
     tasks = [
-        asyncio.create_task(worker(que, DEQ, _, model_suffix=model_suffix))
-        for _ in range(n_workers)
+        asyncio.create_task(worker(que, DEQ, len(texts), wid_, model_suffix=model_suffix, queue_trtexts=queue_trtexts))
+        for wid_ in range(n_workers)
     ]
 
     logger.trace("\n\t >>>>>>>> Start await asyncio.gather")

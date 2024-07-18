@@ -77,16 +77,22 @@ async def newapi_tr(
     **kw: additional params, e.g., temperature, repetition_penalty
 
     """
+    load_dotenv()  # load .env, override=False, env var has precedence
     if not base_url:
-        base_url = "https://newapi.dattw.eu.org/v1"
+        # base_url = "https://newapi.dattw.eu.org/v1"
+        base_url = os.getenv("BASE_URL", "https://newapi.dattw.eu.org/v1")
     if not api_key:
-        load_dotenv()  # load .env, override=False, env var has precedence
-        api_key = os.getenv("API_KEY", "")
+        api_key = os.getenv("API_KEY", "NA")
 
+    _ = """
     if not api_key:
         raise Exception(  # pylint: disable=broad-exception-raised
             "API_KEY not set. Set API_KEY in env var or in .env and try again."
         )
+    # """
+
+    if not base_url.rstrip("/").endswith("v1"):
+        base_url = base_url + "/v1"
 
     subs = to_lang
     if to_lang.lower() in ["chinese"]:
