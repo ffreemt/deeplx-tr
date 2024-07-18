@@ -272,7 +272,7 @@ main_md = Markdown("""
 
 <|deeplx-tr|class_name=error|button|on_action=deepl_tr_action|hover_text=Click to translte text column via deeplx, it will be quite fast if n-deeplx-urls is large relative to number of parahraphs (= 1 + maximum of sn), for example, 50 paragraphs of average lengths will take just a few seconds.|>
 
-<|llm-tr|button|on_action=llm_tr_action|hover_text=Click to translte text column vid llms, it will be slow. For example, 100 paragraphs of average lengths will like take around 10 minutes|>
+<|llm-tr|button|on_action=llm_tr_action|hover_text=Click to translte text column vid llms, it will be slow. For example, 100 paragraphs of average lengths will like take around a few minutes.|>
 
 <|{docx_content}|file_download|label=Dl tr.docx|name=dl-tr.docx|>
 
@@ -291,6 +291,7 @@ status: <|{status}|>
 
 """)
 
+# hover_over=docx format with colored and higglighted text for easy one-click hide op.|
 # dl-tr.docx {dlfilename}
 # <|save-docx|button|on_action=save_docx_action|hover_text=Currently, only docx format is available|>
 
@@ -422,8 +423,8 @@ partial_md = """
 <|lmtext|button|on_action=send_lmtext_action|>
 
 <|
-<|Chat|button|class_name=secondary|on_action=chat_action|>
-<|Advice|button|class_name=secondary|on_action=advice_action|>
+<|Chat|button|class_name=primary|on_action=chat_action|>
+<|Advice|button|class_name=primary|on_action=advice_action|>
 |>
 
 |>

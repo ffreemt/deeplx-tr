@@ -1,17 +1,25 @@
 # deeplx-tr
 [![pytest](https://github.com/ffreemt/deeplx-tr/actions/workflows/routine-tests.yml/badge.svg)](https://github.com/ffreemt/deeplx-tr/actions)[![python](https://img.shields.io/static/v1?label=python+&message=3.8%2B&color=blue)](https://www.python.org/downloads/)[![Code style: black](https://img.shields.io/badge/code%20style-black-000000.svg)](https://github.com/psf/black)[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)[![PyPI version](https://badge.fury.io/py/deeplx_tr.svg)](https://badge.fury.io/py/deeplx_tr)
 
-deeplx in python
+deeplx and llm translate tool in python (wip)
 
-## Install it
+## To run llm-tool
+* `install rye` (google for instructions for yourplatform)
+* `git clone https://github.com/ffreemt/deeplx-tr && cd deeplx-tr`
+* `rye sync`
+* `cp example.env .env` and amend `.env`
+* `rye run taipy llm_tool.py`
+
+## To use the deeplx_tr client
+### Install it
 
 ```shell
 pip install deeplx_tr --pre
 ```
 
-## Use it
+### Use it
 
-### from command line
+#### from command line
 ```bash
 deeplx-tr hello world
 # 哈罗世界
@@ -27,7 +35,7 @@ python -m deeplx_tr hello world
 python -m deeplx_tr hello world -d
 python -m deeplx_tr --help
 ```
-### from python
+#### from python
 ```python
 from deeplx_tr import deeplx_tr
 
