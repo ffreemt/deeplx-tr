@@ -29,7 +29,7 @@ models = [
     # acone:5005 -> oracle2:5005
     "gpt-3.5-turbo-oracle2",
     "gpt-4o-oracle2",
-    # acone:25005 -> oraclex:5005
+    # acone:25005 -> oraclex:5005 is having problem to start ubuntu@oracle:~/chat2api-lanqian, fix: disable kubelet restart
     "gpt-3.5-turbo-oracle",
     "gpt-4o-oracle",
     # "gpt-3.5-turbo",  # duck2api at acone:8080 docker
@@ -107,6 +107,7 @@ models += [
     "gpt-3.5-turbo-uuci",
     "gpt-4-turbo-uuci",
     "gpt-4-uuci",
+    "claude-3.5-sonnet-uuci",
     "gpt-4o-furry",
     "gpt-4-turbo-2024-04-09-furry",
     "gpt-3.5-turbo-furry",
@@ -195,7 +196,15 @@ models += [
     # 'glm-4-bf', 'glm-4-flash-bf', 'glm-4v-bf'
 ]
 
+# zapi file:///C:\mat-dir\snippets\zapi-models.py
+# "https://api.953959.xyz" http://acone:3001
+models += [
+    "gpt-3.5-turbo-z",
+    "gpt-4-turbo-z",
+]
+
 # models = ["gpt-3.5-turbo-d2a"]
+
 
 # https://linux.do/t/topic/98814 https://new.oaifree.com/ token: https://chatgpt.com/api/auth/session ...G2Ow
 

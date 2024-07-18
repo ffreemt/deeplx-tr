@@ -319,7 +319,7 @@ def send_text_action(state, row=None):
             y(state.data_df.text[row])
             state.buffer = state.data_df.text[row]
         except Exception as e:
-            logger.warning(f"{e}: {row=}")
+            logger.warning(f"{e=}: {row=}")
 
     # _ = state.data_df.copy()
     # _.loc[0, "text"] = row
@@ -361,13 +361,19 @@ globals()["send_text_action3"] = lambda x: send_text_action(x, row=3)
 
 def chat_action(state):
     """Send chat response to Output."""
-    y("enter chat_action")
-    state.response = "chat_action"
+    y("enter chat_action -- coming soon, stay tuned")
+    if not state.buffer.strip():
+        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        return
+    state.response = "chat_action -- coming soon, stay tuned"
 
 def advice_action(state):
     """Send (imporvement) advice response to Output."""
-    y("enter advice_action")
-    state.response = "advice_action"
+    y("enter advice_action -- coming soon, stay tuned")
+    if not state.buffer.strip():
+        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        return
+    state.response = "advice_action -- coming soon, stay tuned"
 
 _ = """
 Gui(pages=pages).run(
