@@ -8,7 +8,7 @@ from pathlib import Path
 import pandas as pd
 import numpy as np
 from threading import Thread
-from time import sleep
+from time import sleep, monotonic
 from itertools import zip_longest
 
 from taipy.gui import Gui, Markdown, navigate, notify, State, invoke_callback, get_state_id
@@ -21,6 +21,7 @@ from deeplx_tr import scrape_deeplx_shodan
 from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr
 from deeplx_tr.batch_newapi_tr import batch_newapi_tr
 from deeplx_tr.trtext2docx import trtext2docx
+from deeplx_tr.duration_human import duration_human
 
 from deeplx_tr.info import info_md
 # from home import home_md
@@ -39,8 +40,9 @@ food_df = pd.DataFrame({
 
 path = ""
 filename = ""
-dlfilename = ""
+dlfilename = "dl-tr.docx"
 n_deeplx = ""
+status = ""
 data_df = pd.DataFrame({
     "sn": [elm for elm in range(1)],
     "text": ["test this and that"],
@@ -67,8 +69,12 @@ def data_df2docx(state: State):
         file_content = trtext2docx(text, dxtext, lmtext)
     except Exception as e:
         logger.error(e)
-        file_content = b""
+        file_content = trtext2docx([str(e)])
     return file_content
+
+def data_df2docx_content(state: State):
+    docx = data_df2docx(state)
+    state.docx_content = get_docx_content(docx)
 
 table_properties = {
     "class_name": "rows-bordered rows-similar", # optional
@@ -164,6 +170,8 @@ def deepl_tr_action(state: State):
     using batch_deeplx_tr()
     """
     y("enter deepl_tr_action")
+    then = monotonic()
+    state.status = "diggin deepx_tr..."
     try:
         texts = state.data_df.text.to_list()
         y(texts)
@@ -172,6 +180,8 @@ def deepl_tr_action(state: State):
     except Exception as e:
         logger.error(e)
         trtext_2 = []
+        state.status = str(e)
+        sleep(2)
     if trtext_2:
         len_ = len(state.data_df)
         dict_ = dict(trtext_2)
@@ -182,6 +192,9 @@ def deepl_tr_action(state: State):
 
         state.refresh("data_df")
 
+        data_df2docx_content(state)
+
+    state.status = duration_human(monotonic() - then)
     y("done deepl_tr_action")
 
 
@@ -192,6 +205,8 @@ def llm_tr_action(state: State):
     using batch_deeplx_tr()
     """
     y("enter llm_tr_action")
+    then = monotonic()
+    state.status = "diggin llm_tr..."
     try:
         texts = state.data_df.text.to_list()
         y(texts)
@@ -200,6 +215,8 @@ def llm_tr_action(state: State):
     except Exception as e:
         logger.error(e)
         trtext_2 = []
+        state.status = str(e)
+        sleep(2)
     if trtext_2:
         len_ = len(state.data_df)
         dict_ = dict(trtext_2)
@@ -210,6 +227,9 @@ def llm_tr_action(state: State):
 
         state.refresh("data_df")
 
+        data_df2docx_content(state)
+
+    state.status = duration_human(monotonic() - then)
     y("done llm_tr_action")
 
 
@@ -260,6 +280,8 @@ main_md = Markdown("""
 
 n-deeplx-urls: <|{n_deeplx}|>
 
+status: <|{status}|>
+
 |>
 |>
 
@@ -269,6 +291,7 @@ n-deeplx-urls: <|{n_deeplx}|>
 
 """)
 
+# dl-tr.docx {dlfilename}
 # <|save-docx|button|on_action=save_docx_action|hover_text=Currently, only docx format is available|>
 
 _ = """
