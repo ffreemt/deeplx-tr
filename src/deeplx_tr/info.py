@@ -15,7 +15,7 @@ info_md = Markdown("""
 
 * Join qq-group 桃花元@316287378 for updates and real-time chat.
 
-* Project repo [https://github.com/ffreemt/deeplx-tr](https://github.com/ffreemt/deeplx-tr) should you be intested.
+* Project repo [https://github.com/ffreemt/deeplx-tr](https://github.com/ffreemt/deeplx-tr) should you be interested.
 
 * Get your own free APIKEY from [https://newapi.dattw.eu.org](https://newapi.dattw.eu.org).
 

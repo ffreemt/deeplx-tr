@@ -272,7 +272,7 @@ main_md = Markdown("""
 
 <|deeplx-tr|class_name=error|button|on_action=deepl_tr_action|hover_text=Click to translte text column via deeplx, it will be quite fast if n-deeplx-urls is large relative to number of parahraphs (= 1 + maximum of sn), for example, 50 paragraphs of average lengths will take just a few seconds.|>
 
-<|llm-tr|button|on_action=llm_tr_action|hover_text=Click to translte text column vid llms, it will be slow. For example, 100 paragraphs of average lengths will like take around a few minutes.|>
+<|llm-tr|button|on_action=llm_tr_action|hover_text=Click to translte text column via llms, it will be slow. For example, 100 paragraphs of average lengths will likely take around a few minutes.|>
 
 <|{docx_content}|file_download|label=Dl tr.docx|name=dl-tr.docx|>
 
