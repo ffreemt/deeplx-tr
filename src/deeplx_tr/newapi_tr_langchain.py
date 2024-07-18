@@ -65,6 +65,7 @@ async def newapi_tr_langchain(
     timeout: httpx.Timeout to control various timeouts
     **kw: additional params, e.g., temperature, repetition_penalty
 
+    qwen-max-longcontext-hf
     """
     # get in the same format as API_KEY
     try:
@@ -145,6 +146,31 @@ async def main():
 
     trtext = await newapi_tr_langchain(text, base_url=base_url, api_key=api_key)
     y(trtext)
+
+    # base_url: 'http://newapi.dattw.eu.org/v1'
+    model='qwen-max-longcontext-hf'
+    trtext = await newapi_tr_langchain(text, model=model)
+    y(model, trtext)
+
+    # odd cases::
+    # llama3-70b-8192-groq
+    text = '''”The storage cloud manages all the tiering transparently from the compute servers,” Umamageswaran said. '''
+    model="llama3-70b-8192-groq"
+    trtext = await newapi_tr_langchain(text, model=model)
+    y(model, trtext)
+    # trtext: '«»'
+
+    text = '''### Automated tiering'''
+    trtext = await newapi_tr_langchain(text, model=model)
+    y(model, trtext)
+    # trtext: '###'
+
+    text = '''Oracle said the result is that Exadata Exascale combines the performance of dynamic random-access memory, the input/output performance of flash storage and the capacity of disks.'''
+    model = 'glm-v1'
+    trtext = await newapi_tr_langchain(text, model=model)
+    y(model, trtext)
+    # newapi_tr trtext: 输入/输出性��以及
+    # trtext: OK
 
 
 if __name__ == "__main__":

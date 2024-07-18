@@ -36,35 +36,47 @@ def scrape_deeplx(c):
 
 
 @task()
-def trtext2docx(c):
-    """Test trtext2docx."""
-    # c.run("py trtext2docx")
-    c.run("python -m deeplx_tr.trtext2docx")
-
-
-@task()
 def pytest1(c):
     """Test batch_newapi_tr simple."""
     # c.run("py newapi_tr.py")
     # c.run("rye run pytest -s -k newapi_tr_simple")
     c.run("rye run pytest -s -k newapi_tr1")
 
-@task()
+@task
 def pytest2(c):
     """Test batch_newapi_tr_langchain simple."""
     c.run("rye run pytest -s -k newapi_tr2_langchain")
+
+@task
+def llm_tool(c):
+    """
+    Start daipy llm-tool dev work.
+
+    nodemon -x rye run taipy run llm_tool.py
+    """
+    c.run(r"""nodemon -w llm_tool.py -x rye run taipy run llm_tool.py""")
+
+
+@task(
+    default=True,
+)
+def batch_deeplx_tr(c):
+    """rye run python run-batch_tr.py (deeplx_tr.batch_tr)."""
+    c.run("rye run python run_batch_deeplx_tr.py")
 
 
 @task()
 def batch_newapi_tr(c):
     """Test batch_newapi_tr."""
     # c.run("py newapi_tr.py")
-    c.run("python -m deeplx_tr.batch_newapi_tr")
+    c.run("rye run python -m deeplx_tr.batch_newapi_tr")
 
 
-@task(
-    default=True,
-)
-def run_batch_deeplx_tr(c):
-    """rye run python run-batch_tr.py (deeplx_tr.batch_tr)."""
-    c.run("rye run python run_batch_deeplx_tr.py")
+@task()
+def trtext2docx(c):
+    """Run trtext2docx.
+
+    rye run python -m deeplx_tr.trtext2docx
+    """
+    # c.run("py trtext2docx")
+    c.run("rye run python -m deeplx_tr.trtext2docx")

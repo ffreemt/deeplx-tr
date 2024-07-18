@@ -6,7 +6,7 @@ from contextlib import suppress
 from loguru import logger
 from loadtext import loadtext
 
-from deeplx_tr.batch_tr import batch_tr, DEQ
+from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr, DEQ
 from ycecream import y
 
 # turn ycecream off
@@ -85,7 +85,7 @@ n_workers = 0  # n_workers = len(texts)
 n_workers = 19
 n_workers = 9
 
-_ = asyncio.run(batch_tr(texts, n_workers=n_workers))
+_ = asyncio.run(batch_deeplx_tr(texts, n_workers=n_workers))
 
 # print('[int(isinstance(elm, Exception)) for elm in _])', [int(isinstance(elm, Exception)) for elm in _])
 

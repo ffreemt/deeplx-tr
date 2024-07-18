@@ -24,6 +24,9 @@ dependencies = [
     "python-dotenv>=1.0.1",
     "langchain-openai>=0.1.14",
     "langchain>=0.2.6",
+    "taipy>=3.1.1",
+    "python-magic>=0.4.27",
+    "python-magic-bin>=0.4.14",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

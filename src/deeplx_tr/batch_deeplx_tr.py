@@ -12,7 +12,7 @@ from collections import deque
 from pathlib import Path
 from random import randrange
 from time import monotonic
-from typing import List, Union
+from typing import List, Tuple, Union
 
 import diskcache
 from loguru import logger
@@ -224,7 +224,7 @@ async def worker(
     return trtext_list
 
 
-async def batch_deepl_tr(texts: List[str], n_workers: int = 4):
+async def batch_deeplx_tr(texts: List[str], n_workers: int = 4) -> List[Tuple[int, str]]:
     """
     Translate in batch using urls from deq.
 
@@ -324,5 +324,5 @@ async def batch_deepl_tr(texts: List[str], n_workers: int = 4):
 
 
 if __name__ == "__main__":
-    _ = asyncio.run(batch_tr(["test 123", "test abc "]))
+    _ = asyncio.run(batch_deeplx_tr(["test 123", "test abc "]))
     print(_)

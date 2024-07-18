@@ -151,6 +151,10 @@ def scrape_deeplx_fofa(
         )
         res.raise_for_status()
         text = res.text
+    except httpx.RequestError as e:
+        logger.error(f"An error occurred while requesting {e.request.url!r}: {e}")
+    except httpx.HTTPStatusError as e:
+        logger.error(f"Error response {e.response.status_code} while requesting {e.request.url!r}: {e.response.text}")
     except Exception as exc:
         logger.error(exc)
         raise

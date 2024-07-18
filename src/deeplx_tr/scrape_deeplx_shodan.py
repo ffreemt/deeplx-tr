@@ -15,7 +15,7 @@ invoke
 # pylint: disable=invalid-name, broad-except, line-too-long, too-many-statements, too-many-branches
 import asyncio
 import re
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 from time import time
 from typing import List, Union
@@ -140,8 +140,14 @@ def scrape_deeplx_shodan(
         )
         res.raise_for_status()
         text = res.text
-    except Exception as exc:
-        logger.error(exc)
+    except httpx.RequestError as e:
+        logger.error(f"An error occurred while requesting {e.request.url!r}: {e}")
+        return []
+    except httpx.HTTPStatusError as e:
+        logger.error(f"Error response {e.response.status_code} while requesting {e.request.url!r}: {e.response.text}")
+        return []
+    except Exception as e:
+        logger.error(e)
         raise
     logger.trace(f"{text[:100]=}")
 
@@ -185,6 +191,7 @@ async def main():
     console.print("diggin shodan...", style="yellow")
     then = time()
     # try 3 times with increased timeout
+    url_list_shodan = []
     for _ in range(3):
         console.print(
             "fetching info from shodan",
@@ -208,7 +215,6 @@ async def main():
             f"Make sure you can visit {url}."
         )
         # raise Exception(f"Make sure you can visit {url}.")
-        raise SystemExit(f"Make sure you can visit {url}.")
 
     console.print("Fetched shodan urls: ", url_list_shodan)
     console.print(
@@ -220,6 +226,7 @@ async def main():
     console.print("diggin fofa...", style="yellow")
     then = time()
     # try 3 times with increased timeout
+    url_list_fofa = []
     for _ in range(3):
         console.print(
             "fetching info from fofa",
@@ -228,7 +235,7 @@ async def main():
         if _ > 0:
             logger.info(f"Retry: {_}")
         try:
-            timeout = Timeout(30 * 1.2**_)
+            timeout = Timeout(30 * 1.2 ** _)
             url_list_fofa = scrape_deeplx_fofa(timeout=timeout)
             break
         except httpx.ReadTimeout:
@@ -242,7 +249,8 @@ async def main():
             "see previous error messages, no network? "
             f"Make sure you can visit {url}."
         )
-        raise Exception(f"Make sure you can visit {url}.")
+        # raise Exception(f"Make sure you can visit {url}.")
+        logger.warning(f"Make sure you can visit {url}.")
 
     console.print("Fetched fofa urls: ", url_list_fofa)
     console.print(
@@ -334,7 +342,10 @@ async def main():
         "Valid urls:",
         urls_valid,
         f"{total=}",
+        datetime.now().strftime("%Y-%m-%d %H:%M"),
     )
+
+    return total
 
 
 if __name__ == "__main__":

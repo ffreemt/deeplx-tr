@@ -32,7 +32,7 @@ def kill_self():
     print(" tr1 module end ")
 
 @pytest.mark.timeout(15)
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio
 async def test_newapi_tr1_simple():
     """
     Test newapi_tr simple.
@@ -48,7 +48,7 @@ async def test_newapi_tr1_simple():
 
 
 @pytest.mark.timeout(15)
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio
 async def test_newapi_tr1_d2a_cloudrun():
     """
     Test test_newapi_tr_d2a_cloudrun.
@@ -64,7 +64,7 @@ async def test_newapi_tr1_d2a_cloudrun():
     assert any(elm in str(trtext) for elm in ["测", "个", "翻译"])
 
 @pytest.mark.timeout(15)
-@pytest.mark.asyncio(scope="session")
+@pytest.mark.asyncio
 async def test_newapi_tr1_d2a_hf():
     """
     Test test_newapi_tr_d2a_hf.

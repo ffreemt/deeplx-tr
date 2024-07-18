@@ -42,10 +42,10 @@ except:  # noqa  # pylint: disable=bare-except
 # DEQ = deque(newapi_models[:10])
 
 # models = newapi_models[-10:]
-MODELS = newapi_models[:25]
+MODELS = newapi_models[:]
 DEQ = deque(MODELS)
 
-y(DEQ)
+# y(DEQ)
 
 
 async def newapi_tr(

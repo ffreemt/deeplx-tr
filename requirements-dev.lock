@@ -12,11 +12,20 @@ aiohttp==3.9.5
     # via langchain
 aiosignal==1.3.1
     # via aiohttp
+aniso8601==9.0.1
+    # via flask-restful
 annotated-types==0.7.0
     # via pydantic
 anyio==4.3.0
     # via httpx
     # via openai
+apispec==6.4.0
+    # via apispec-webframeworks
+    # via taipy-rest
+apispec-webframeworks==1.0.0
+    # via taipy-rest
+arrow==1.3.0
+    # via cookiecutter
 astroid==3.2.2
     # via pylint
 asttokens==2.4.1
@@ -26,14 +35,35 @@ async-timeout==4.0.3
     # via langchain
 attrs==23.2.0
     # via aiohttp
+    # via automat
+    # via twisted
+automat==22.10.0
+    # via twisted
+bidict==0.23.1
+    # via python-socketio
+binaryornot==0.4.4
+    # via cookiecutter
+blinker==1.8.2
+    # via flask
+boto3==1.34.34
+    # via taipy-core
+botocore==1.34.144
+    # via boto3
+    # via s3transfer
 certifi==2024.2.2
     # via httpcore
     # via httpx
     # via requests
+cffi==1.16.0
+    # via gevent
+chardet==5.2.0
+    # via binaryornot
 charset-normalizer==3.3.2
     # via loadtext
     # via requests
 click==8.1.7
+    # via cookiecutter
+    # via flask
     # via typer
 colorama==0.4.6
     # via click
@@ -43,52 +73,98 @@ colorama==0.4.6
     # via pylint
     # via pytest
     # via tqdm
+constantly==23.10.4
+    # via twisted
+cookiecutter==2.5.0
+    # via taipy
 cssselect==1.2.0
     # via pyquery
 decorator==5.1.1
     # via ipython
+deepdiff==6.7.1
+    # via taipy-config
 dill==0.3.8
     # via pylint
 diskcache==5.6.3
     # via deeplx-tr
 distro==1.9.0
     # via openai
+dnspython==2.6.1
+    # via pymongo
 environs==9.5.0
     # via set-loglevel
+et-xmlfile==1.1.0
+    # via openpyxl
 exceptiongroup==1.2.0
     # via anyio
     # via ipython
     # via pytest
 executing==2.0.1
     # via stack-data
+flask==3.0.2
+    # via flask-cors
+    # via flask-restful
+    # via flask-socketio
+    # via taipy-gui
+    # via taipy-rest
+flask-cors==4.0.0
+    # via taipy-gui
+flask-restful==0.3.10
+    # via taipy-rest
+flask-socketio==5.3.6
+    # via taipy-gui
 frozenlist==1.4.1
     # via aiohttp
     # via aiosignal
+gevent==23.9.1
+    # via gevent-websocket
+    # via taipy-gui
+gevent-websocket==0.10.1
+    # via taipy-gui
+gitignore-parser==0.1.11
+    # via taipy-gui
 greenlet==3.0.3
+    # via gevent
     # via sqlalchemy
 h11==0.14.0
     # via httpcore
+    # via wsproto
 httpcore==1.0.5
     # via httpx
 httpx==0.27.0
     # via deeplx-tr
     # via openai
+hyperlink==21.0.0
+    # via twisted
 idna==3.6
     # via anyio
     # via httpx
+    # via hyperlink
     # via requests
     # via yarl
+incremental==22.10.0
+    # via twisted
 iniconfig==2.0.0
     # via pytest
 ipython==8.23.0
 isort==5.13.2
     # via pylint
+itsdangerous==2.2.0
+    # via flask
 jedi==0.19.1
     # via ipython
+jinja2==3.1.4
+    # via cookiecutter
+    # via flask
+jmespath==1.0.1
+    # via boto3
+    # via botocore
 jsonpatch==1.33
     # via langchain-core
 jsonpointer==3.0.0
     # via jsonpatch
+kthread==0.2.3
+    # via taipy-gui
 langchain==0.2.6
     # via deeplx-tr
 langchain-core==0.2.11
@@ -113,10 +189,16 @@ logzero==1.7.0
 lxml==5.2.2
     # via pyquery
     # via python-docx
+markdown==3.5.2
+    # via taipy-gui
 markdown-it-py==3.0.0
     # via rich
-marshmallow==3.21.1
+markupsafe==2.1.5
+    # via jinja2
+    # via werkzeug
+marshmallow==3.20.2
     # via environs
+    # via taipy-rest
 matplotlib-inline==0.1.6
     # via ipython
 mccabe==0.7.0
@@ -128,19 +210,33 @@ multidict==6.0.5
     # via yarl
 nest-asyncio==1.6.0
     # via deeplx-tr
+networkx==3.2.1
+    # via taipy-core
 numpy==1.26.4
     # via langchain
+    # via pandas
+    # via pyarrow
 openai==1.35.3
     # via deeplx-tr
     # via langchain-openai
+openpyxl==3.1.2
+    # via taipy-core
+ordered-set==4.1.0
+    # via deepdiff
 orjson==3.10.6
     # via langsmith
 packaging==24.0
+    # via apispec
     # via langchain-core
     # via marshmallow
     # via pytest
+pandas==2.2.0
+    # via taipy-core
+    # via taipy-gui
 parso==0.8.4
     # via jedi
+passlib==1.7.4
+    # via taipy-rest
 platformdirs==4.2.2
     # via pylint
 pluggy==1.5.0
@@ -149,6 +245,10 @@ prompt-toolkit==3.0.43
     # via ipython
 pure-eval==0.2.2
     # via stack-data
+pyarrow==15.0.0
+    # via taipy-core
+pycparser==2.22
+    # via cffi
 pydantic==2.7.4
     # via langchain
     # via langchain-core
@@ -160,6 +260,8 @@ pygments==2.17.2
     # via ipython
     # via rich
 pylint==3.2.4
+pymongo==4.6.1
+    # via taipy-core
 pyperclip==1.8.2
     # via deeplx-tr
 pyquery==2.0.0
@@ -169,45 +271,98 @@ pytest==8.2.2
     # via pytest-timeout
 pytest-asyncio==0.23.7
 pytest-timeout==2.3.1
+python-dateutil==2.9.0.post0
+    # via arrow
+    # via botocore
+    # via pandas
 python-docx==1.1.2
     # via deeplx-tr
 python-dotenv==1.0.1
     # via deeplx-tr
     # via environs
+    # via taipy-gui
+python-engineio==4.9.1
+    # via python-socketio
+python-magic==0.4.27
+    # via deeplx-tr
+python-magic-bin==0.4.14
+    # via deeplx-tr
 python-run-cmd==0.1.1
+python-slugify==8.0.4
+    # via cookiecutter
+python-socketio==5.11.3
+    # via flask-socketio
+pytz==2023.3.post1
+    # via flask-restful
+    # via pandas
+    # via taipy-gui
 pyyaml==6.0.1
+    # via apispec
+    # via cookiecutter
     # via langchain
     # via langchain-core
 regex==2024.5.15
     # via tiktoken
 requests==2.32.3
+    # via cookiecutter
     # via langchain
     # via langsmith
     # via tiktoken
 rich==13.7.1
+    # via cookiecutter
     # via deeplx-tr
     # via python-run-cmd
     # via typer
 ruff==0.3.5
+s3transfer==0.10.2
+    # via boto3
 set-loglevel==0.1.2
     # via deeplx-tr
+setuptools==70.3.0
+    # via zope-event
+    # via zope-interface
 shellingham==1.5.4
     # via typer
+simple-websocket==1.0.0
+    # via python-engineio
+    # via taipy-gui
 six==1.16.0
     # via asttokens
+    # via automat
+    # via flask-restful
+    # via python-dateutil
 sniffio==1.3.1
     # via anyio
     # via httpx
     # via openai
-sqlalchemy==2.0.31
+sqlalchemy==2.0.25
     # via langchain
+    # via taipy-core
 stack-data==0.6.3
     # via ipython
+taipy==3.1.1
+    # via deeplx-tr
+taipy-config==3.1.1
+    # via taipy-core
+    # via taipy-gui
+taipy-core==3.1.1
+    # via taipy-rest
+taipy-gui==3.1.3
+    # via taipy
+taipy-rest==3.1.1
+    # via taipy
+taipy-templates==3.1.1
+    # via taipy
 tenacity==8.4.2
     # via langchain
     # via langchain-core
+text-unidecode==1.3
+    # via python-slugify
 tiktoken==0.7.0
     # via langchain-openai
+toml==0.10.2
+    # via taipy-config
+    # via taipy-core
 tomli==2.0.1
     # via pylint
     # via pytest
@@ -218,8 +373,14 @@ tqdm==4.66.4
 traitlets==5.14.2
     # via ipython
     # via matplotlib-inline
+twisted==23.10.0
+    # via taipy-gui
+twisted-iocpsupport==1.0.4
+    # via twisted
 typer==0.12.3
     # via deeplx-tr
+types-python-dateutil==2.9.0.20240316
+    # via arrow
 typing-extensions==4.11.0
     # via anyio
     # via astroid
@@ -229,13 +390,29 @@ typing-extensions==4.11.0
     # via pydantic-core
     # via python-docx
     # via sqlalchemy
+    # via twisted
     # via typer
+tzdata==2024.1
+    # via pandas
+    # via tzlocal
+tzlocal==5.2
+    # via taipy-gui
 urllib3==2.2.2
+    # via botocore
     # via requests
 wcwidth==0.2.13
     # via prompt-toolkit
+werkzeug==3.0.3
+    # via flask
 win32-setctime==1.1.0
     # via loguru
+wsproto==1.2.0
+    # via simple-websocket
 yarl==1.9.4
     # via aiohttp
 ycecream==1.3.17
+zope-event==5.0
+    # via gevent
+zope-interface==6.4.post2
+    # via gevent
+    # via twisted
