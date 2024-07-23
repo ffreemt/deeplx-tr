@@ -128,7 +128,8 @@ def trtext2docx(
             paragraph = document.add_paragraph(style="AlttextStyle")
             run = paragraph.add_run(col2)
             run.font.name = "SimSun"
-            run._element.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft YaHei")
+            # run._element.rPr.rFonts.set(qn("w:eastAsia"), "Microsoft YaHei")
+            run._element.rPr.rFonts.set(qn("w:eastAsia"), "NSimSun")
     if outfile:
         try:
             document.save(outfile)

@@ -1,0 +1,69 @@
+base_url: https://newapi.dattw.eu.org
+# api_key in .env or env var
+#
+# newapi_models converted: print('\n  - '.join([str(list(elm)) if isinstance(elm, tuple) else elm for elm in newapi_models]))
+# load: models = yaml.safe_load(Path('model-list.yml').read_text()).get("models")
+# need to convert list entry to tuples for model_use_stats (collections. defaultdict)
+# models = [elm if instance(elm, str) else tuple(elm) for elm in models]
+# models = yaml.load(Path('model-list.yml').read_text(), Loader=yaml.Loader).get('models')
+# models = yaml.safe_load(Path('model-list.yml').read_text()).get('models')
+models:
+  - qwen-turbo-hf
+  - qwen-max-hf
+  - qwen-max-longcontext-hf
+  - qwen-plus-hf
+  - qwen-vl-max-hf
+  - qwen-vl-plus-hf
+  - qwen-v1-hf
+  - qwen-v1-vision-hf
+  - deepseek-chat
+  - deepseek-chat-hf
+  - deepseek-coder-hf
+  - glm-3-turbo
+  - glm-4
+  - glm-4v
+  - glm-v1
+  - glm-v1-vision
+  - llama3-70b-8192-groq
+  - mixtral-8x7b-32768-groq
+  - gpt-3.5-turbo-uuci
+  - gpt-4-turbo-uuci
+  - gpt-4-uuci
+  - claude-3.5-sonnet-uuci
+  - gpt-4o-furry
+  - gpt-4-turbo-2024-04-09-furry
+  - gpt-3.5-turbo-furry
+  - gpt-3.5-turbo-bh
+  - gpt-4-turbo-preview-bh
+  - gpt-4-bh
+  - gpt-4o-bh
+  - gpt-3.5-turbo-instruct-bh
+  # - command-nightly-bf
+  # - command-r-bf
+  # - command-r-plus-bf
+  # - deepseek-chat-bf
+  # - deepseek-coder-bf
+  # - glm-3-turbo-bf
+  - gpt-3.5-turbo-z
+  - gpt-4-turbo-z
+
+  - gpt-3.5-turbo
+  - gpt-4o
+  # - gpt-4o-chat2api
+  - gpt-3.5-turbo-grun
+  - gpt-4o-grun
+  - gpt-3.5-turbo-grun2
+  - gpt-4o-grun2
+  - gpt-3.5-turbo-chat2api
+  - gpt-3.5-turbo-oracle2
+  - gpt-4o-oracle2
+  - gpt-3.5-turbo-oracle
+  - gpt-4o-oracle
+  - gpt-3.5-turbo-d2a
+
+  - !!python/tuple [gpt-3.5-turbo, https://duck2api-lovat.vercel.app, any]
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-u3l3laz3.b4a.run', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://mikeee-duck2api.hf.space/hf', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://sun-i-duck2api.hf.space/hf', 'any']
+  - !!python/tuple [gpt-3.5-turbo, https://Raimbault-duck2api.hf.space/hf, any]
+  - !!python/tuple ['gpt-3.5-turbo', 'https://gyxz-duck2api.hf.space/hf', 'any']

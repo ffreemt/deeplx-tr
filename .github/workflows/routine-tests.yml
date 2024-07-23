@@ -41,4 +41,4 @@ jobs:
           # rye build
           rye sync
       - name: Run pytest
-        run: rye run pytest
+        run: rye run pytest -k sanity

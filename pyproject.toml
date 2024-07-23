@@ -58,6 +58,7 @@ allow-direct-references = true
 packages = ["src/deeplx_tr"]
 
 [tool.pytest.ini_options]
+asyncio_mode = "auto"
 minversion = "6.0"
 # addopts = "-ra -q --doctest-modules -s"
 addopts = "-ra -q --doctest-modules -s -p no:warnings"

@@ -50,7 +50,7 @@ def pytest2(c):
 @task
 def llm_tool(c):
     """
-    Start daipy llm-tool dev work.
+    Start taipy llm-tool dev work.
 
     nodemon -x rye run taipy run llm_tool.py
     """

@@ -6,8 +6,8 @@ import pytest
 
 # this seems to hang the test
 import os  # noqa
-# from deeplx_tr.newapi_tr import newapi_tr
-from deeplx_tr.newapi_tr_langchain import newapi_tr_langchain as newapi_tr
+from deeplx_tr.newapi_tr import newapi_tr
+# from deeplx_tr.newapi_tr_langchain import newapi_tr_langchain as newapi_tr
 
 from python_run_cmd import run_cmd
 from ycecream import y
@@ -18,11 +18,13 @@ y.configure(sln=1)
 text = "Test this and that."
 
 # gpt-3.5-turbo
+_ = """
 @pytest.fixture
 def event_loop():
     loop = asyncio.new_event_loop()
     yield loop
     loop.close()
+"""
 
 
 def teardown_module1():

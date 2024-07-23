@@ -75,6 +75,10 @@ async def newapi_tr_langchain(
 
     if not base_url:
         base_url = "https://newapi.dattw.eu.org/v1"
+    # append /v1 if not present
+    if not base_url.strip().strip("/").endswith("/v1"):
+        base_url = base_url.strip().strip("/") + "/v1"
+
     if not api_key.secret.get_secret_value():  # empty original api_key
         # load_dotenv()  # load .env, override=False, env var has precedence
         # api_key = os.getenv("API_KEY", "")
