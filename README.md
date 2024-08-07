@@ -6,6 +6,7 @@ deeplx and llm translate tool in python (wip)
 ## To run llm-tool
 * `install rye` (google for instructions for yourplatform)
 * `git clone https://github.com/ffreemt/deeplx-tr && cd deeplx-tr`
+* `rye pin 3.10`  # or pick another python version, e.g., 3.12
 * `rye sync`
 * `cp example.env .env` and amend `.env`
 * `rye run taipy llm_tool.py`
