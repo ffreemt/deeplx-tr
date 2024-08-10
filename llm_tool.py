@@ -27,7 +27,7 @@ from deeplx_tr.duration_human import duration_human
 from deeplx_tr.info import info_md
 # from home import home_md
 
-llm = ChatOpenAI(base_url='https://litellm.dattw.eu.org/v1', ali_key="NA")
+llm = ChatOpenAI(base_url='https://litellm.dattw.eu.org/v1', api_key="NA")
 
 y.configure(sln=1, st=1)
 
