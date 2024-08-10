@@ -16,6 +16,7 @@ import pandas as pd
 from ycecream import y
 from loadtext import loadtext
 from loguru import logger
+from langchain_openai import ChatOpenAI
 
 from deeplx_tr import scrape_deeplx_shodan
 from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr
@@ -25,6 +26,8 @@ from deeplx_tr.duration_human import duration_human
 
 from deeplx_tr.info import info_md
 # from home import home_md
+
+llm = ChatOpenAI(base_url='https://litellm.dattw.eu.org/v1')
 
 y.configure(sln=1, st=1)
 
@@ -337,13 +340,19 @@ def send_text_action(state, row=None):
     """Send data_df.text[row] to buffer."""
     y(state.buffer)
     y(row)
-    if not row:
+
+    if not row or row == 0:
         try:
             row = int(state.row_no)
-            y(state.data_df.text[row])
-            state.buffer = state.data_df.text[row]
-        except Exception as e:
-            logger.warning(f"{e=}: {row=}")
+        except Exception as exc:
+            logger.error(exc)
+            row = 0
+
+    try:
+        y(state.data_df.text[row])
+        state.buffer = state.data_df.text[row]
+    except Exception as e:
+        logger.warning(f"{e=}: {row=}")
 
     # _ = state.data_df.copy()
     # _.loc[0, "text"] = row
@@ -387,17 +396,34 @@ def chat_action(state):
     """Send chat response to Output."""
     y("enter chat_action -- coming soon, stay tuned")
     if not state.buffer.strip():
-        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT. Or type something in the Buffer box."
         return
-    state.response = "chat_action -- coming soon, stay tuned"
+    state.response = " llm diggin..."
+    try:
+        resp = llm.invoke(state.buffer)
+        # response = f"{resp.content} ({resp.usage_metadata})"
+        response = resp.content
+    except Exception as exc:
+        logger.error(exc)
+        response = str(exc)
+    state.response = " chat_action -- coming soon, stay tuned"
+    state.response = response
 
-def advice_action(state):
+def reflect_action(state):
     """Send (imporvement) advice response to Output."""
-    y("enter advice_action -- coming soon, stay tuned")
+    y("enter reflect_action -- coming soon, stay tuned")
     if not state.buffer.strip():
         state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
         return
-    state.response = "advice_action -- coming soon, stay tuned"
+    state.response = "reflect_action -- coming soon, stay tuned"
+
+def improve_action(state):
+    """Send (imporvement) advice response to Output."""
+    y("enter improve_action -- coming soon, stay tuned")
+    if not state.buffer.strip():
+        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        return
+    state.response = "improve_action -- coming soon, stay tuned"
 
 _ = """
 Gui(pages=pages).run(
@@ -414,7 +440,7 @@ partial_md = """
 
 <|layout|gap=0px|columns=80px 80px 120px 120px 1fr|
 
-<|{row_no}|input|label=row-n|hover_text=specify n-the row, click text or dxtext or lmtext to send to Buffer for processsing|>
+<|{row_no}|input|label=row-n|hover_text=specify n-th row, click text or dxtext or lmtext to send text to Buffer for processsing|>
 
 <|Text|button|on_action=send_text_action|>
 
@@ -424,7 +450,8 @@ partial_md = """
 
 <|
 <|Chat|button|class_name=primary|on_action=chat_action|>
-<|Advice|button|class_name=primary|on_action=advice_action|>
+<|Reflect|button|class_name=primary|on_action=reflect_action|>
+<|Improve|button|class_name=primary|on_action=improve_action|>
 |>
 
 |>
@@ -447,6 +474,14 @@ llm_suggest_partial = gui.add_partial(partial_md)
 # |>
 
 if __name__ == "__main__":
+    def signal_handler(signal, frame):
+        print(f"signal: {signal}")
+        print(f"frame: {frame}")
+        print("You pressed Ctrl+C, goodbye!")
+        sys.exit(130)  # raise SystemExit(130)
+    # or use
+    # signal.signal(signal.SIGINT, signal_handler)
+
     Thread(target=set_n_deeplx_handler, args=(gui,)).start()
 
     gui.run(
