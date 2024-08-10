@@ -27,7 +27,7 @@ dependencies = [
     "taipy>=3.1.1",
     "python-magic>=0.4.27",
     'python-magic-bin>=0.4.14; sys_platform == "win32"',
-    "lmtr-agents>=0.1.0a1",
+    "lmtr-agents>=0.1.0a2",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"

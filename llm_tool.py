@@ -18,6 +18,8 @@ from loadtext import loadtext
 from loguru import logger
 from langchain_openai import ChatOpenAI
 
+from lmtr_agents import agent_tr, agent_ref, agent_imp, agent_comb, agent_comb_imp, agent_comb_imp1
+
 from deeplx_tr import scrape_deeplx_shodan
 from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr
 from deeplx_tr.batch_newapi_tr import batch_newapi_tr
@@ -247,6 +249,7 @@ def save_docx_action(state: State):
 show_pane = False
 show_dialog = True
 buffer = " "
+reflection = " "
 response = " "
 row_no = 0
 
@@ -413,9 +416,26 @@ def reflect_action(state):
     """Send (imporvement) advice response to Output."""
     y("enter reflect_action -- coming soon, stay tuned")
     if not state.buffer.strip():
-        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        state.reflection = "Buffer empty, nothing to relefct on -- first click one of TRTEXT LMTEXT."
         return
-    state.response = "reflect_action -- coming soon, stay tuned"
+    state.reflection = " reflect_action diggin..."
+
+    if not state.row_no or state.row_no == 0:
+        try:
+            row = int(state.row_no)
+        except Exception as e:
+            logger.warning(f"{e}: {row=}")
+
+    y(state.data_df.text[row])
+    y(state.buffer)
+
+    try:
+        reflection = agent_ref(state.data_df.text[row], state.buffer)
+    except Exception as exc:
+        reflection = str(exc)
+
+    state.reflection = "reflect_action -- coming soon, stay tuned"
+    state.reflection = reflection
 
 def improve_action(state):
     """Send (imporvement) advice response to Output."""
@@ -424,6 +444,23 @@ def improve_action(state):
         state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
         return
     state.response = "improve_action -- coming soon, stay tuned"
+
+def combine_action(state):
+    """Send (imporvement) advice response to Output."""
+    y("enter combine_action -- coming soon, stay tuned")
+    if not state.buffer.strip():
+        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        return
+    state.response = "combine_action -- coming soon, stay tuned"
+
+def combimp_action(state):
+    """Send (imporvement) advice response to Output."""
+    y("enter combimp_action -- coming soon, stay tuned")
+    if not state.buffer.strip():
+        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+        return
+    state.response = "combimp_action -- coming soon, stay tuned"
+
 
 _ = """
 Gui(pages=pages).run(
@@ -452,13 +489,17 @@ partial_md = """
 <|Chat|button|class_name=primary|on_action=chat_action|>
 <|Reflect|button|class_name=primary|on_action=reflect_action|>
 <|Improve|button|class_name=primary|on_action=improve_action|>
+<|Combine|button|class_name=primary|on_action=combine_action|>
+<|Combimp|button|class_name=primary|on_action=combimp_action|>
 |>
 
 |>
 
-<|layout|columns=400px 1fr|
+<|layout|columns=1fr 1.2fr 1fr|
 
 <|{buffer}|input|multiline=True|label=Buffer|>
+
+<|{reflection}|input|multiline=True|label=Reflection|>
 
 <|{response}|input|multiline=True|label=LLM Response|>
 

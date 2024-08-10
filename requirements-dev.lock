@@ -180,7 +180,7 @@ langchain-text-splitters==0.2.2
 langsmith==0.1.83
     # via langchain
     # via langchain-core
-lmtr-agents==0.1.0a1
+lmtr-agents==0.1.0a2
     # via deeplx-tr
 loadtext==0.0.3
     # via deeplx-tr
