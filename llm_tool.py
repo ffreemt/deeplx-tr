@@ -1,59 +1,115 @@
+"""Run taipy ui."""
 # https://docs.taipy.io/en/develop/tutorials/visuals/2_using_tables/
 
 import asyncio
 import io
 import os
-from docx import Document
-from pathlib import Path
-import pandas as pd
-import numpy as np
-from threading import Thread
-from time import sleep, monotonic
+import signal
+import sys
 from itertools import zip_longest
+from pathlib import Path
+from threading import Thread
+from time import monotonic, sleep
 
-from taipy.gui import Gui, Markdown, navigate, notify, State, invoke_callback, get_state_id
+import numpy as np
 import pandas as pd
-from ycecream import y
-from loadtext import loadtext
-from loguru import logger
-from langchain_openai import ChatOpenAI
 
-from lmtr_agents import agent_tr, agent_ref, agent_imp, agent_comb, agent_comb_imp, agent_comb_imp1
-
+# agent_comb,
+# agent_comb_imp,
+# agent_comb_imp1,
 from deeplx_tr import scrape_deeplx_shodan
 from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr
 from deeplx_tr.batch_newapi_tr import batch_newapi_tr
-from deeplx_tr.trtext2docx import trtext2docx
+from deeplx_tr.color_diff import color_diff, plussign_diff
 from deeplx_tr.duration_human import duration_human
-
 from deeplx_tr.info import info_md
+from deeplx_tr.trtext2docx import trtext2docx
+from docx import Document
+from langchain_openai import ChatOpenAI
+from lmtr_agents import (
+    agent_imp,
+    # agent_tr,
+    agent_ref,
+)
+from loadtext import loadtext
+from loguru import logger
+from taipy.gui import (
+    Gui,
+    Markdown,
+    # notify,
+    State,
+    get_state_id,
+    invoke_callback,
+    navigate,
+)
+from ycecream import y
+
 # from home import home_md
 
-llm = ChatOpenAI(base_url='https://litellm.dattw.eu.org/v1', api_key="NA")
+llm = ChatOpenAI(base_url="https://litellm.dattw.eu.org/v1", api_key="NA")
 
 y.configure(sln=1, st=1)
 
 # if HOST set, run on "0.0.0.0", default to 127.0.0.1
 HOST = "0.0.0.0" if os.getenv("HOST") else None
 
-food_df = pd.DataFrame({
-    "Meal": ["Lunch", "Dinner", "Lunch", "Lunch", "Breakfast", "Breakfast", "Lunch", "Dinner"],
-    "Category": ["Food", "Food", "Drink", "Food", "Food", "Drink", "Dessert", "Dessert"],
-    "Name": ["Burger", "Pizza", "Soda", "Salad", "Pasta", "Water", "Ice Cream", "Cake"],
-    "Calories": [300, 400, 150, 200, 500, 0, 400, 500],
-})
+food_df = pd.DataFrame(
+    {
+        "Meal": [
+            "Lunch",
+            "Dinner",
+            "Lunch",
+            "Lunch",
+            "Breakfast",
+            "Breakfast",
+            "Lunch",
+            "Dinner",
+        ],
+        "Category": [
+            "Food",
+            "Food",
+            "Drink",
+            "Food",
+            "Food",
+            "Drink",
+            "Dessert",
+            "Dessert",
+        ],
+        "Name": [
+            "Burger",
+            "Pizza",
+            "Soda",
+            "Salad",
+            "Pasta",
+            "Water",
+            "Ice Cream",
+            "Cake",
+        ],
+        "Calories": [300, 400, 150, 200, 500, 0, 400, 500],
+    }
+)
 
 path = ""
 filename = ""
 dlfilename = "dl-tr.docx"
 n_deeplx = ""
 status = ""
-data_df = pd.DataFrame({
-    "sn": [elm for elm in range(1)],
-    "text": ["test this and that"],
-    "dxtext": [""],
-    "lmtext": [""],
-})
+data_df = pd.DataFrame(
+    {
+        "sn": [elm for elm in range(1)],
+        "text": ["test this and that"],
+        "dxtext": [""],
+        "lmtext": [""],
+    }
+)
+
+
+def signal_handler(signal, frame):
+    print(f"signal: {signal}")
+    print(f"frame: {frame}")
+    print("You pressed Ctrl+C, goodbye!")
+    sys.exit(130)  # raise SystemExit(130)
+
 
 def get_docx_content(docx: Document):
     """Convert docx to bytes."""
@@ -63,8 +119,10 @@ def get_docx_content(docx: Document):
     # can be save to a file:
     return bytesio.getvalue()
 
+
 docx_content = get_docx_content(trtext2docx(["test this and that"]))
 # Path('test1.docx').write_bytes(docx_content)
+
 
 def data_df2docx(state: State):
     text = state.data_df.text.tolist()
@@ -77,12 +135,14 @@ def data_df2docx(state: State):
         file_content = trtext2docx([str(e)])
     return file_content
 
+
 def data_df2docx_content(state: State):
     docx = data_df2docx(state)
     state.docx_content = get_docx_content(docx)
 
+
 table_properties = {
-    "class_name": "rows-bordered rows-similar", # optional
+    "class_name": "rows-bordered rows-similar",  # optional
     # "style": table_style,
 }
 
@@ -96,7 +156,9 @@ table_properties = {
 
 # https://docs.taipy.io/en/develop/tutorials/visuals/6_css_style_kit/
 
+
 def txt2list(state):
+    y("enter txt2list")
     try:
         path = state.path
         y(path)
@@ -117,13 +179,17 @@ def txt2list(state):
         y(sn_list[:5])
 
         state.data_df = pd.DataFrame(
-            np.array([*zip_longest(
-                sn_list,
-                texts,
-                [],
-                [],
-                fillvalue="",
-            )]),
+            np.array(
+                [
+                    *zip_longest(
+                        sn_list,
+                        texts,
+                        [],
+                        [],
+                        fillvalue="",
+                    )
+                ]
+            ),
             columns=["sn", "text", "dxtext", "lmtext"],
         )
 
@@ -137,6 +203,7 @@ def txt2list(state):
 
 # sort of a global
 state_id = []
+
 
 def on_init(state: State):
     y("enter on_init")
@@ -242,6 +309,7 @@ def save_docx_action(state: State):
     """Save docx, save-docx|button."""
     y("enter save_docx_action")
 
+
 # {: .color-primary}
 # **LLM** **Tool**
 # {: .text-center}
@@ -251,7 +319,8 @@ show_dialog = True
 buffer = " "
 reflection = " "
 response = " "
-row_no = 0
+row_n = 0
+
 
 # def dialog_action(state, id, payload):
 def toggle_table_dialog1(state):
@@ -260,6 +329,7 @@ def toggle_table_dialog1(state):
         # depending on payload["args"][0]: -1 for close icon, 0 for Validate, 1 for Cancel
         ...
         st.show_dialog = not st.show_dialog
+
 
 # dialog pop-up
 def toggle_table_dialog(state):
@@ -331,6 +401,7 @@ pages = {
 }
 page_names = [page for page in pages.keys() if page != "/"]
 
+
 def menu_action(state, action, payload):
     y(action)
     y(payload)
@@ -339,6 +410,7 @@ def menu_action(state, action, payload):
     navigate(state, page)
     # navigate(state, action)
 
+
 def send_text_action(state, row=None):
     """Send data_df.text[row] to buffer."""
     y(state.buffer)
@@ -346,7 +418,7 @@ def send_text_action(state, row=None):
 
     if not row or row == 0:
         try:
-            row = int(state.row_no)
+            row = int(state.row_n)
         except Exception as exc:
             logger.error(exc)
             row = 0
@@ -354,12 +426,15 @@ def send_text_action(state, row=None):
     try:
         y(state.data_df.text[row])
         state.buffer = state.data_df.text[row]
+        state.status = f"{row=}, text -> buffer"
     except Exception as e:
         logger.warning(f"{e=}: {row=}")
+        state.status = f"{row=}, out of range?"
 
     # _ = state.data_df.copy()
     # _.loc[0, "text"] = row
     # state.data_df = _
+
 
 def send_dxtext_action(state, row=None):
     """Send data_df.dxtext[row] to buffer."""
@@ -367,11 +442,13 @@ def send_dxtext_action(state, row=None):
     y(row)
     if not row or row == 0:
         try:
-            row = int(state.row_no)
+            row = int(state.row_n)
             y(state.data_df.dxtext[row])
             state.buffer = state.data_df.dxtext[row]
+            state.status = f"{row=}, dxtext -> buffer"
         except Exception as e:
             logger.warning(f"{e}: {row=}")
+            state.status = f"{row=}, out of range?"
 
 
 def send_lmtext_action(state, row=None):
@@ -380,19 +457,21 @@ def send_lmtext_action(state, row=None):
     y(row)
     if not row or row == 0:
         try:
-            row = int(state.row_no)
+            row = int(state.row_n)
             y(state.data_df.lmtext[row])
             state.buffer = state.data_df.lmtext[row]
+            state.status = f"{row=}, lmtext -> buffer"
         except Exception as e:
             logger.warning(f"{e}: {row=}")
+            state.status = f"{row=}, out of range?"
 
 
 def send_text_action1(state, row=1):
     y(row)
 
 
-send_text_action2 = lambda x: send_text_action(x, row=2)
-globals()["send_text_action3"] = lambda x: send_text_action(x, row=3)
+# send_text_action2 = lambda x: send_text_action(x, row=2)
+# globals()["send_text_action3"] = lambda x: send_text_action(x, row=3)
 
 
 def chat_action(state):
@@ -412,38 +491,92 @@ def chat_action(state):
     state.response = " chat_action -- coming soon, stay tuned"
     state.response = response
 
+
 def reflect_action(state):
-    """Send (imporvement) advice response to Output."""
+    """Reflect on buffer content."""
+    state.status = "diggin..."
     y("enter reflect_action -- coming soon, stay tuned")
     if not state.buffer.strip():
-        state.reflection = "Buffer empty, nothing to relefct on -- first click one of TRTEXT LMTEXT."
+        state.reflection = (
+            "Buffer empty, nothing to relefct on -- first click one of TRTEXT LMTEXT."
+        )
         return
     state.reflection = " reflect_action diggin..."
 
-    if not state.row_no or state.row_no == 0:
+    if state.row_n or state.row_n == 0:
         try:
-            row = int(state.row_no)
+            row = int(state.row_n)
         except Exception as e:
-            logger.warning(f"{e}: {row=}")
-
-    y(state.data_df.text[row])
-    y(state.buffer)
+            logger.warning(f"{e}: {state.row_n=}")
+            state.status = f"row={state.row_n}, invalid?"
+            return
 
     try:
+        y(state.data_df.text[row])
+        y(state.buffer)
+    except Exception as e:
+        y(e)
+        state.reflection = f"{e=}, uh oh..."
+        return
+
+    try:
+        state.status = "agent_ref diggin..."
         reflection = agent_ref(state.data_df.text[row], state.buffer)
+        state.status = "done agent_ref diggin..."
     except Exception as exc:
-        reflection = str(exc)
+        reflection = f"{exc=}, net hiccup? try again"
+        state.status = "uh oh... try again"
 
     state.reflection = "reflect_action -- coming soon, stay tuned"
     state.reflection = reflection
 
+
 def improve_action(state):
-    """Send (imporvement) advice response to Output."""
-    y("enter improve_action -- coming soon, stay tuned")
-    if not state.buffer.strip():
-        state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
+    """Improve based on reflection."""
+    state.status = "diggin..."
+    y("enter reflect_action -- coming soon, stay tuned")
+    if not state.reflection.strip():
+        state.response = (
+            "Reflection empty  -- you may want to first click REFLECT. "
+            "improve_action diggin..."
+        )
+        # return
+    else:
+        state.response = " improve_action diggin..."
+
+    if state.row_n or state.row_n == 0:
+        try:
+            row = int(state.row_n)
+        except Exception as e:
+            logger.warning(f"{e}: {state.row_n=}")
+            state.status = f"row={state.row_n}, invalid?"
+            return
+    try:
+        y(state.data_df.text[row])
+        y(state.reflection)
+    except Exception as e:
+        y(e)
+        state.response = "{e=}, uh oh..."
         return
-    state.response = "improve_action -- coming soon, stay tuned"
+    try:
+        # response = agent_ref(state.data_df.text[row], state.buffer)
+        state.status = "agent_imp diggin..."
+        response = agent_imp(state.data_df.text[row], state.buffer, state.reflection)
+        # highlight
+        response = (
+            plussign_diff(state.buffer, response)
+            + "\n === TODO \n<br/>"
+            + color_diff(state.buffer, response)
+        )
+
+        state.status = "done agent_imp diggin..."
+    except Exception as exc:
+        response = f"{exc=}, net hiccup? try again"
+        state.status = "uh oh... try again"
+
+    state.response = "reflect_action -- coming soon, stay tuned"
+    state.response = response
+
 
 def combine_action(state):
     """Send (imporvement) advice response to Output."""
@@ -453,6 +586,7 @@ def combine_action(state):
         return
     state.response = "combine_action -- coming soon, stay tuned"
 
+
 def combimp_action(state):
     """Send (imporvement) advice response to Output."""
     y("enter combimp_action -- coming soon, stay tuned")
@@ -460,6 +594,26 @@ def combimp_action(state):
         state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT."
         return
     state.response = "combimp_action -- coming soon, stay tuned"
+
+
+def buffer_action(state, id, payload):
+    """Act (callback) when a specific (default ENTER) is pressed."""
+    y("enter buffer_action")
+    y(state, id, payload)
+
+    y("running chat(state)...")
+    chat_action(state)
+    y("done running chat(state)...")
+
+
+def row_n_action(state, id, payload):
+    """Act (callback) for row_n (number) on_change/on_action."""
+    y("enter row_n_action")
+    y(state, id, payload)
+
+    y("running send_text_action(state)...")
+    send_text_action(state)
+    y("done running send_text_action(state)...")
 
 
 _ = """
@@ -472,12 +626,13 @@ Gui(pages=pages).run(
 )
 # """
 
+# 80px 80px 120px 120px 120px 120px 120px 120px 120px
 partial_md = """
 <|
 
-<|layout|gap=0px|columns=80px 80px 120px 120px 1fr|
+<|layout|gap=2px|columns=70px 80px 100px 100px 100px 100px 110px 110px 110px|
 
-<|{row_no}|input|label=row-n|hover_text=specify n-th row, click text or dxtext or lmtext to send text to Buffer for processsing|>
+<|{row_n}|number|id=row_n|on_action=row_n_action|on_change=row_n_action|label=row-n|hover_text=specify n-th row, click text or dxtext or lmtext to send text to Buffer for processsing|>
 
 <|Text|button|on_action=send_text_action|>
 
@@ -485,28 +640,35 @@ partial_md = """
 
 <|lmtext|button|on_action=send_lmtext_action|>
 
-<|
 <|Chat|button|class_name=primary|on_action=chat_action|>
+
 <|Reflect|button|class_name=primary|on_action=reflect_action|>
+
 <|Improve|button|class_name=primary|on_action=improve_action|>
+
 <|Combine|button|class_name=primary|on_action=combine_action|>
+
 <|Combimp|button|class_name=primary|on_action=combimp_action|>
-|>
 
 |>
 
-<|layout|columns=1fr 1.2fr 1fr|
+<|layout|columns=300px 400px 300px|
 
-<|{buffer}|input|multiline=True|label=Buffer|>
+<|{buffer}|input|on_action=buffer_action|multiline=True|label=Buffer|>
 
-<|{reflection}|input|multiline=True|label=Reflection|>
+<|{reflection}|input|class_name=fullwidth|multiline=True|label=Reflection|>
 
-<|{response}|input|multiline=True|label=LLM Response|>
+<|
+<strong>LLM Response</strong><br></br>
+<|{response}|text|mode=raw|>
+|>
 
 |>
 
 |>
 """
+# <|{response}|text|mode=md|class_name=container|label=LLM Response|>
+# <|{response}|input|multiline=True|label=LLM Response|>
 
 gui = Gui(pages=pages)
 
@@ -515,13 +677,7 @@ llm_suggest_partial = gui.add_partial(partial_md)
 # |>
 
 if __name__ == "__main__":
-    def signal_handler(signal, frame):
-        print(f"signal: {signal}")
-        print(f"frame: {frame}")
-        print("You pressed Ctrl+C, goodbye!")
-        sys.exit(130)  # raise SystemExit(130)
-    # or use
-    # signal.signal(signal.SIGINT, signal_handler)
+    signal.signal(signal.SIGINT, signal_handler)
 
     Thread(target=set_n_deeplx_handler, args=(gui,)).start()
 

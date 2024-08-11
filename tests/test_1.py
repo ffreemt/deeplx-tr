@@ -19,8 +19,8 @@ async def test_1():
     rye run pytest -s -k newapi_tr_simple
     """
     # asyncio.set_event_loop(event_loop)
-    base_url = "https://duck2api-service-2nsfpsd6ca-uc.a.run.app/v1"
-    # base_url = "https://mikeee-duck2api.hf.space/hf/v1"
+
+    base_url = "https://mikeee-duck2api.hf.space/hf/v1"
     trtext = await newapi_tr(text, base_url=base_url, api_key="any")
 
     trtext = await newapi_tr(text)
