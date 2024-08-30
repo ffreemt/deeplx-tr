@@ -476,8 +476,8 @@ def send_text_action1(state, row=1):
 
 def chat_action(state):
     """Send chat response to Output."""
-    y("enter chat_action -- coming soon, stay tuned")
-    if not state.buffer.strip():
+    y("enter chat_action...")
+    if state.buffer is None or not state.buffer.strip():
         state.response = "Buffer empty -- first click one of TEXT, TRTEXT LMTEXT. Or type something in the Buffer box."
         return
     state.response = " llm diggin..."
@@ -495,7 +495,7 @@ def chat_action(state):
 def reflect_action(state):
     """Reflect on buffer content."""
     state.status = "diggin..."
-    y("enter reflect_action -- coming soon, stay tuned")
+    y("enter reflect_action...d")
     if not state.buffer.strip():
         state.reflection = (
             "Buffer empty, nothing to relefct on -- first click one of TRTEXT LMTEXT."
@@ -602,7 +602,10 @@ def buffer_action(state, id, payload):
     y(state, id, payload)
 
     y("running chat(state)...")
-    chat_action(state)
+    try:
+        chat_action(state)
+    except Exception as e:
+        y(e)
     y("done running chat(state)...")
 
 

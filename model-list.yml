@@ -17,15 +17,33 @@ base_url: https://newapi.dattw.eu.org
 # models = yaml.safe_load(Path('model-list.yml').read_text()).get('models')
 
 models:
-  - gpt-3.5-turbo-grun
-  - gpt-4o-grun
-  - gpt-3.5-turbo-chat2api
-  - gpt-4o-chat2api
-  - gpt-4-chat2api
-  - gpt-3.5-turbo-oracle2
-  - gpt-4o-oracle2
-  - gpt-3.5-turbo-oracle
-  - gpt-4o-oracle
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api.dattw.eu.org', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api1.dattw.eu.org', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api2.dattw.eu.org', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api2.dattw.eu.org', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-service-2nsfpsd6ca-uc.a.run.app', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api-service-2nsfpsd6ca-uc.a.run.app', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-lovat.vercel.app', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api-lovat.vercel.app', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-u3l3laz3.b4a.run', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api-u3l3laz3.b4a.run', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-3a2b982t.b4a.run', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api-3a2b982t.b4a.run', 'any']
+  # northflank google yc
+  # - !!python/tuple ['gpt-3.5-turbo', '"https://p01--duck2api--b69bn8cbbs7k.code.run"', 'any']
+  # - !!python/tuple ['gpt-4o-mini', '"https://p01--duck2api--b69bn8cbbs7k.code.run"', 'any']
+  - !!python/tuple ['gpt-3.5-turbo', 'https://yc--northflank-duckapi--b69bn8cbbs7k.code.run', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://yc--northflank-duckapi--b69bn8cbbs7k.code.run', 'any']
+
+  # - gpt-3.5-turbo-grun
+  # - gpt-4o-grun
+  # - gpt-3.5-turbo-chat2api
+  # - gpt-4o-chat2api
+  # - gpt-4-chat2api
+  # - gpt-3.5-turbo-oracle2
+  # - gpt-4o-oracle2
+  # - gpt-3.5-turbo-oracle
+  # - gpt-4o-oracle
   - gpt-3.5-turbo-d2a
   - qwen-turbo-hf
   - qwen-max-hf
@@ -38,25 +56,26 @@ models:
   - deepseek-chat
   - deepseek-chat-hf
   - deepseek-coder-hf
-  - glm-3-turbo
-  - glm-4
-  - glm-4v
-  - glm-v1
-  - glm-v1-vision
-  - llama3-70b-8192-groq
-  - mixtral-8x7b-32768-groq
-  - gpt-3.5-turbo-uuci
+  - deepseek-chat-acone
+  # - glm-3-turbo
+  # - glm-4
+  # - glm-4v
+  # - glm-v1
+  # - glm-v1-vision
+  # - llama3-70b-8192-groq
+  # - mixtral-8x7b-32768-groq
+  # - gpt-3.5-turbo-uuci
   - gpt-4-turbo-uuci
   - gpt-4-uuci
-  - claude-3.5-sonnet-uuci
+  # - claude-3.5-sonnet-uuci
   - gpt-4o-furry
-  - gpt-4-turbo-2024-04-09-furry
+  # - gpt-4-turbo-2024-04-09-furry
   - gpt-3.5-turbo-furry
-  - gpt-3.5-turbo-bh
-  - gpt-4-turbo-preview-bh
-  - gpt-4-bh
-  - gpt-4o-bh
-  - gpt-3.5-turbo-instruct-bh
+  # - gpt-3.5-turbo-bh
+  # - gpt-4-turbo-preview-bh
+  # - gpt-4-bh
+  # - gpt-4o-bh
+  # - gpt-3.5-turbo-instruct-bh
   # - command-nightly-bf
   # - command-r-bf
   # - command-r-plus-bf
@@ -79,3 +98,4 @@ models:
   # - !!python/tuple ['gpt-3.5-turbo', 'https://gyxz-duck2api.hf.space/hf', 'any']
 
   - !!python/tuple ['gpt-3.5-turbo', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['deepseek-chat', 'https://litellm.dattw.eu.org', 'any']
