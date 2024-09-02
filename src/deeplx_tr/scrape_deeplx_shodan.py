@@ -17,6 +17,7 @@ import asyncio
 import re
 from datetime import datetime, timedelta
 from pathlib import Path
+from random import choices
 from time import time
 from typing import List, Union
 
@@ -92,7 +93,7 @@ def duration_human(value: float) -> str:
 
 
 def scrape_deeplx_shodan(
-    query: str = "deepl api",
+    query: str = "",
     timeout: Union[float, Timeout] = Timeout(30),
     throttle: bool = True,
 ) -> List[str]:
@@ -110,6 +111,9 @@ def scrape_deeplx_shodan(
     list of deeplx sites or None (when run too soon [within 10 minutes])
 
     """
+    if not query:
+        query = choices(["deepl api", "welcome to deeplx"])[0]
+    logger.debug(f"{query=}")
     # check sentinel in cache
     value, expire_time = cache.get(  # type: ignore
         "sentinel",
@@ -301,8 +305,13 @@ async def main():
         "https://freedeeplxapi1.ddl.us.kg",
         "https://ihabis-deeplx-test2-no-token.hf.space",
         "https://wuran-deeplx.hf.space",
+        "https://uu0103-deeplx.hf.space",
+        "https://xcq-1-deeplx.hf.space",
         "https://mikeee-deeplx.hf.space",
         "https://deeplx.dattw.eu.org",
+        # deeplx-local at hf
+        "https://mikeee-deeplx-local.hf.space",
+        "https://bestmaple-deeplx-local.hf.space",
     ]
     # extra_urls = ["https://api.deeplx.org"]
 

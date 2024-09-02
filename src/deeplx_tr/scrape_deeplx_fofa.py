@@ -51,9 +51,14 @@ SENTINEL_EXPIRE = 600  # 10 minutes
 # url = httpx.get("""https://www.shodan.io/search?query=DeepL+Translate+Api""", timeout=120)
 # url = "https://www.shodan.io/search"
 
+# docker https://huggingface.co/spaces/vinhson/deeplx
+# FROM ghcr.io/xiaoxuan6/deeplx:latest
+# """body='{"code":200,"msg":"welcome to deeplx"}'"""
+
 query_def1 = '''"deepl translate api" && country="CN"'''
 query_def2 = '''body='{"code":200,"message":"DeepL Free API, Developed by sjlleo and missuo. Go to /translate with POST. http://github.com/OwO-Network/DeepLX"}' && country="CN"'''
-query_def = choices([query_def1, query_def2])[0]
+query_def3 = '''"welcome to deeplx" && country="CN"'''
+query_def = choices([query_def1, query_def2, query_def3])[0]
 
 DURATION_HUMAN_SPEC = (
     (1.0e-6, 1e9, 1e3, "ns"),
@@ -101,7 +106,7 @@ def duration_human(value: float) -> str:
 
 
 def scrape_deeplx_fofa(
-    query: str = query_def,
+    query: str = "",
     timeout: Union[float, Timeout] = Timeout(30),
     throttle: bool = True,
 ) -> List[str]:
@@ -119,6 +124,9 @@ def scrape_deeplx_fofa(
     list of deeplx sites or None (when run too soon [within 10 minutes])
 
     """
+    if not query:
+        query = choices([query_def1, query_def2, query_def3])[0]
+
     # check sentinel-fofa in cache
     value, expire_time = cache.get(  # type: ignore
         "sentinel-fofa",
@@ -143,6 +151,7 @@ def scrape_deeplx_fofa(
     url = f"https://en.fofa.info/result?qbase64={base64.b64encode(query.encode()).decode()}"
 
     logger.trace(f"{url=}, {query=}")
+    logger.debug(f"{url=}, {query=}")
     try:
         res = httpx.get(
             url,
