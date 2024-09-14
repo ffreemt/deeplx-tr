@@ -1,4 +1,7 @@
 base_url: https://newapi.dattw.eu.org
+
+# yaml.load(Path('model-list.yml').read_text(), Loader=yaml.Loader)
+
 # api_key in .env or env var
 #
 # newapi_models converted: print('\n  - '.join([str(list(elm)) if isinstance(elm, tuple) else elm for elm in newapi_models]))
@@ -65,9 +68,10 @@ models:
   # - llama3-70b-8192-groq
   # - mixtral-8x7b-32768-groq
   # - gpt-3.5-turbo-uuci
-  - gpt-4-turbo-uuci
-  - gpt-4-uuci
+  # - gpt-4-turbo-uuci
+  # - gpt-4-uuci
   # - claude-3.5-sonnet-uuci
+  - gpt-4o-mini-uuci
   - gpt-4o-furry
   # - gpt-4-turbo-2024-04-09-furry
   - gpt-3.5-turbo-furry
@@ -79,11 +83,11 @@ models:
   # - command-nightly-bf
   # - command-r-bf
   # - command-r-plus-bf
-  # - deepseek-chat-bf
-  # - deepseek-coder-bf
+  # - deep seek-chat-bf
+  # - deep seek-coder-bf
   # - glm-3-turbo-bf
-  - gpt-3.5-turbo-z
-  - gpt-4-turbo-z
+  # - gpt-3.5-turbo-z
+  # - gpt-4-turbo-z
   - !!python/tuple [gpt-3.5-turbo, https://duck2api.dattw.eu.org, any]
   - !!python/tuple [gpt-3.5-turbo, https://duck2api1.dattw.eu.org, any]
   - !!python/tuple [gpt-3.5-turbo, https://duck2api2.dattw.eu.org, any]
@@ -99,3 +103,5 @@ models:
 
   - !!python/tuple ['gpt-3.5-turbo', 'https://litellm.dattw.eu.org', 'any']
   - !!python/tuple ['deepseek-chat', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['claude-3.5-sonnet', 'https://litellm.dattw.eu.org', 'any']

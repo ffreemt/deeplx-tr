@@ -6,12 +6,16 @@
 #   features: []
 #   all-features: false
 #   with-sources: false
+#   generate-hashes: false
+#   universal: false
 
 -e file:.
 aiohttp==3.9.5
     # via langchain
 aiosignal==1.3.1
     # via aiohttp
+altair==5.4.1
+    # via streamlit
 aniso8601==9.0.1
     # via flask-restful
 annotated-types==0.7.0
@@ -36,6 +40,8 @@ async-timeout==4.0.3
 attrs==23.2.0
     # via aiohttp
     # via automat
+    # via jsonschema
+    # via referencing
     # via twisted
 automat==22.10.0
     # via twisted
@@ -45,11 +51,14 @@ binaryornot==0.4.4
     # via cookiecutter
 blinker==1.8.2
     # via flask
+    # via streamlit
 boto3==1.34.34
     # via taipy-core
 botocore==1.34.144
     # via boto3
     # via s3transfer
+cachetools==5.5.0
+    # via streamlit
 certifi==2024.2.2
     # via httpcore
     # via httpx
@@ -64,6 +73,7 @@ charset-normalizer==3.3.2
 click==8.1.7
     # via cookiecutter
     # via flask
+    # via streamlit
     # via typer
 colorama==0.4.6
     # via click
@@ -121,8 +131,12 @@ gevent==23.9.1
     # via taipy-gui
 gevent-websocket==0.10.1
     # via taipy-gui
+gitdb==4.0.11
+    # via gitpython
 gitignore-parser==0.1.11
     # via taipy-gui
+gitpython==3.1.43
+    # via streamlit
 greenlet==3.0.3
     # via gevent
     # via sqlalchemy
@@ -154,8 +168,10 @@ itsdangerous==2.2.0
 jedi==0.19.1
     # via ipython
 jinja2==3.1.4
+    # via altair
     # via cookiecutter
     # via flask
+    # via pydeck
 jmespath==1.0.1
     # via boto3
     # via botocore
@@ -163,6 +179,10 @@ jsonpatch==1.33
     # via langchain-core
 jsonpointer==3.0.0
     # via jsonpatch
+jsonschema==4.23.0
+    # via altair
+jsonschema-specifications==2023.12.1
+    # via jsonschema
 kthread==0.2.3
     # via taipy-gui
 langchain==0.2.12
@@ -213,6 +233,8 @@ mdurl==0.1.2
 multidict==6.0.5
     # via aiohttp
     # via yarl
+narwhals==1.7.0
+    # via altair
 nest-asyncio==1.6.0
     # via deeplx-tr
 networkx==3.2.1
@@ -221,6 +243,8 @@ numpy==1.26.4
     # via langchain
     # via pandas
     # via pyarrow
+    # via pydeck
+    # via streamlit
 openai==1.35.3
     # via deeplx-tr
     # via langchain-openai
@@ -231,26 +255,34 @@ ordered-set==4.1.0
 orjson==3.10.6
     # via langsmith
 packaging==24.0
+    # via altair
     # via apispec
     # via langchain-core
     # via marshmallow
     # via pytest
+    # via streamlit
 pandas==2.2.0
+    # via streamlit
     # via taipy-core
     # via taipy-gui
 parso==0.8.4
     # via jedi
 passlib==1.7.4
     # via taipy-rest
+pillow==10.4.0
+    # via streamlit
 platformdirs==4.2.2
     # via pylint
 pluggy==1.5.0
     # via pytest
 prompt-toolkit==3.0.43
     # via ipython
+protobuf==5.28.1
+    # via streamlit
 pure-eval==0.2.2
     # via stack-data
 pyarrow==15.0.0
+    # via streamlit
     # via taipy-core
 pycparser==2.22
     # via cffi
@@ -261,6 +293,8 @@ pydantic==2.7.4
     # via openai
 pydantic-core==2.18.4
     # via pydantic
+pydeck==0.9.1
+    # via streamlit
 pygments==2.17.2
     # via ipython
     # via rich
@@ -307,19 +341,27 @@ pyyaml==6.0.1
     # via cookiecutter
     # via langchain
     # via langchain-core
+referencing==0.35.1
+    # via jsonschema
+    # via jsonschema-specifications
 regex==2024.5.15
     # via tiktoken
 requests==2.32.3
     # via cookiecutter
     # via langchain
     # via langsmith
+    # via streamlit
     # via tiktoken
 rich==13.7.1
     # via cookiecutter
     # via deeplx-tr
     # via lmtr-agents
     # via python-run-cmd
+    # via streamlit
     # via typer
+rpds-py==0.20.0
+    # via jsonschema
+    # via referencing
 ruff==0.3.5
 s3transfer==0.10.2
     # via boto3
@@ -338,6 +380,8 @@ six==1.16.0
     # via automat
     # via flask-restful
     # via python-dateutil
+smmap==5.0.1
+    # via gitdb
 sniffio==1.3.1
     # via anyio
     # via httpx
@@ -347,6 +391,8 @@ sqlalchemy==2.0.25
     # via taipy-core
 stack-data==0.6.3
     # via ipython
+streamlit==1.38.0
+    # via deeplx-tr
 taipy==3.1.1
     # via deeplx-tr
 taipy-config==3.1.1
@@ -363,11 +409,13 @@ taipy-templates==3.1.1
 tenacity==8.4.2
     # via langchain
     # via langchain-core
+    # via streamlit
 text-unidecode==1.3
     # via python-slugify
 tiktoken==0.7.0
     # via langchain-openai
 toml==0.10.2
+    # via streamlit
     # via taipy-config
     # via taipy-core
 tomli==2.0.1
@@ -375,6 +423,8 @@ tomli==2.0.1
     # via pytest
 tomlkit==0.12.5
     # via pylint
+tornado==6.4.1
+    # via streamlit
 tqdm==4.66.4
     # via openai
 traitlets==5.14.2
@@ -390,6 +440,7 @@ typer==0.12.3
 types-python-dateutil==2.9.0.20240316
     # via arrow
 typing-extensions==4.11.0
+    # via altair
     # via anyio
     # via astroid
     # via ipython
@@ -399,6 +450,7 @@ typing-extensions==4.11.0
     # via pydantic-core
     # via python-docx
     # via sqlalchemy
+    # via streamlit
     # via twisted
     # via typer
 tzdata==2024.1
@@ -409,6 +461,8 @@ tzlocal==5.2
 urllib3==2.2.2
     # via botocore
     # via requests
+watchdog==4.0.2
+    # via streamlit
 wcwidth==0.2.13
     # via prompt-toolkit
 werkzeug==3.0.3

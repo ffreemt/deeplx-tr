@@ -56,6 +56,15 @@ def llm_tool(c):
     """
     c.run(r"""nodemon -w llm_tool.py -x rye run taipy run llm_tool.py""")
 
+@task
+def llm_tool1(c):
+    """
+    Start strreamlit llm-tool dev work.
+
+    nodemon -w Translate -w pages -x uv run streamlit run Translate.py
+    """
+    c.run(r"""nodemon -w Translate -w pages -x uv run streamlit run Translate.py""")
+
 
 @task(
     default=True,
