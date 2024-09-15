@@ -1,0 +1,7 @@
+# Precision banking: The ‘digital twin’ advantage
+
+img__
+
+So-called “digital twins” are dynamic, virtual replicas of complex systems. Organizations often use them for scenario planning because they blend real-world elements with simulations and a constant flow of data, helping evaluate the consequences of different decisions. For example, when BMO acquired 503 Bank of the West branches in 2023, it used Matterport’s capture services to create dimensionally accurate 3D digital twins of all the branch locations within three months.
+
+This technology enabled BMO to complete remote site assessments and operational tests within the model without service disruptions. The results: Over $500,000 saved in 15 months, 6,000 survey hours recouped across 503 locations, and branch resources and documentation centralized.

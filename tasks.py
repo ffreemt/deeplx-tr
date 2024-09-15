@@ -61,9 +61,9 @@ def llm_tool1(c):
     """
     Start strreamlit llm-tool dev work.
 
-    nodemon -w Translate -w pages -x uv run streamlit run Translate.py
+    nodemon -x uv run streamlit run 🌐Translate.py
     """
-    c.run(r"""nodemon -w Translate -w pages -x uv run streamlit run Translate.py""")
+    c.run(r"""nodemon -x uv run streamlit run 🌐Translate.py""")
 
 
 @task(
@@ -76,9 +76,13 @@ def batch_deeplx_tr(c):
 
 @task()
 def batch_newapi_tr(c):
-    """Test batch_newapi_tr."""
+    """
+    Test batch_newapi_tr.
+
+    similar to check_models.py.
+    """
     # c.run("py newapi_tr.py")
-    c.run("rye run python -m deeplx_tr.batch_newapi_tr")
+    c.run("uv run python -m deeplx_tr.batch_newapi_tr")
 
 
 @task()

@@ -16,13 +16,14 @@ from time import monotonic
 from typing import List
 
 import diskcache
+import yaml
 from loadtext import loadtext
 from loguru import logger
 
 # from openai import OpenAI, AzureOpenAI
 from ycecream import y
 
-from deeplx_tr.newapi_models import newapi_models
+# from deeplx_tr.newapi_models import newapi_models
 from deeplx_tr.newapi_tr import newapi_tr
 
 y.configure(sln=1, rn=1)
@@ -46,10 +47,14 @@ except:  # noqa  # pylint: disable=bare-except
 # DEQ = deque(newapi_models[:10])
 
 # models = newapi_models[-10:]
-MODELS = newapi_models[:]
-DEQ = deque(MODELS)
+# MODELS = newapi_models[:]
 
-y(list(DEQ)[:25])
+# DEQ = deque(newapi_models)
+
+newapi_models = yaml.load(Path('model-list.yml').read_text(), Loader=yaml.Loader).get('models')
+DEQ = deque(newapi_models)
+
+y(DEQ, len(DEQ))
 
 # initialize stats for each model, some are 3-tuple
 model_use_stats = {model: defaultdict(int) for model in DEQ}
@@ -86,6 +91,7 @@ async def worker(
     ----
         queue_texts: async queue for texts
         deq_models: deuque for models
+        n_items: total number of items in the queue
         wid: identifier of this worker for debugging and info collecting, default randrange(1000)
         queue_trtexts: async queue for translated texts, shared among possible many workers
         timeout: seconds per item in queue_texts, to exit While True loop
@@ -206,7 +212,7 @@ async def worker(
 
                     model_use_stats[model_or_3_tuple]["empty"] += 1
 
-                    await asyncio.sleep(0.01)
+                    await asyncio.sleep(0.1)
                 else:  # success
                     logger.info(f"{wid=} {seqno=} done ")
 
@@ -219,6 +225,7 @@ async def worker(
                     await cache_incr("workers_succ", wid)
 
                     model_use_stats[model_or_3_tuple]["succ"] += 1
+                    await asyncio.sleep(0.1)
 
     logger.trace(f"\n\t {trtext_list=}, {wid=} fini")
 
@@ -269,10 +276,17 @@ async def batch_newapi_tr(
     cache.set("workers_emp", [0] * n_workers)
 
     queue_trtexts = asyncio.Queue()  # this seems necessary
+    _ = """
     tasks = [
         asyncio.create_task(worker(que, DEQ, len(texts), wid_, model_suffix=model_suffix, queue_trtexts=queue_trtexts))
         for wid_ in range(n_workers)
     ]
+    # """
+    tasks = []
+    for wid_ in range(n_workers):
+        task = asyncio.create_task(worker(que, DEQ, len(texts), wid_, model_suffix=model_suffix, queue_trtexts=queue_trtexts))
+        await asyncio.sleep(0)
+        tasks.append(task)
 
     logger.trace("\n\t >>>>>>>> Start await asyncio.gather")
     trtext_list = await asyncio.gather(*tasks)
@@ -368,12 +382,16 @@ if __name__ == "__main__":
     # asyncio.run(main())
 
     # texts = loadtext(r"C:\syncthing\00xfer\2021it\2024-05-30.txt", splitlines=1)
-    texts_list = loadtext(r"C:\syncthing\00xfer\2021it\2024-06-20.txt", splitlines=1)
+    texts_list = loadtext("tests/2024-06-20.txt")
     texts_list = texts_list[:30]
 
+    # texts_list = loadtext(r"tests/test.txt")
+
+    _ = """
     today = f"{datetime.date.today()}"
     with suppress(Exception):
         texts_list = loadtext(rf"C:\syncthing\00xfer\2021it\{today}.txt", splitlines=1)
+    # """
 
     # _ = asyncio.run(batch_newapi_tr(["test 123", "test abc "]))
 
@@ -410,6 +428,7 @@ if __name__ == "__main__":
 
     print(f"{'model':<28}:", ["success", "failure", "empty"])
     # y(f"{'model':<28}:", ["success", "failure", "empty"])
-    for model_, _ in zip(MODELS, stats):
+    # for model_, _ in zip(MODELS, stats):
+    for model_, _ in zip(newapi_models, stats):
         # print(f"{model_:<28}:", _)
         print(_, model_)

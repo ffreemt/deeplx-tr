@@ -54,7 +54,7 @@ async def newapi_tr(
     base_url: str = "",
     api_key: str = "",
     to_lang: str = "Chinese",
-    timeout=Timeout(45.0, connect=10.0),
+    timeout=Timeout(10.0, connect=10.0),
     **kw,
 ) -> str:
     """
