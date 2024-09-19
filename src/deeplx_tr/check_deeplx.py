@@ -26,14 +26,14 @@ filter and sort:
     print('\n'.join(_[0] for _ in valid_lst1))
 filter invalid
     print('\n'.join(_[1] for _ in filter(lambda x: isinstance(x[1], str), lst1)))
-
-# pylint: disable=too-many-branches, too-many-statements
 """
+
 # pylint: disable=invalid-name, broad-except, broad-exception-raised
 # from about_time import about_time
 from time import time
 from typing import Tuple, Union
 
+import aiohttp
 import httpx
 from httpx import Timeout
 from loguru import logger
@@ -69,7 +69,9 @@ def check_deeplx(
 
         # latency_or_error: Union[float, str] = round(atime.duration, 2)
         latency_or_error: Union[float, str] = round(time() - then, 2)
-
+    except httpx.RequestError as exc:
+        logger.trace(f"{exc=}")
+        check, latency_or_error = False, str(exc)[:70]
     except Exception as exc:
         logger.trace(f"{exc=}")
         check, latency_or_error = False, str(exc)[:70]
@@ -114,9 +116,59 @@ async def check_deeplx_async(
         # latency_or_error: Union[float, str] = round(atime.duration, 2)
         latency_or_error: Union[float, str] = round(time() - then, 2)
     except httpx.ConnectTimeout:
+        check, latency_or_error = False, "Timeout"
+    except httpx.ReadTimeout:
+        check, latency_or_error = False, "ReadTimeout"
+    except Exception as exc:
+        logger.trace(f"{url}, {exc=}")
+        check, latency_or_error = False, str(exc)[:70]
+
+    # return check, latency_or_error
+    del check  # no use, we are returning url instead
+    return url, latency_or_error
+
+
+async def check_deeplx_async1(
+    url: str, timeout: float = 4
+) -> Tuple[str, Union[float, str]]:
+    """
+    Check url for valid deeplx service using aiohttp.
+
+    Args:
+    ----
+      url: dest url to check, must be a legit URL
+      timeout: float, default 4
+
+    Returns:
+    -------
+      (True, latency in second) if deeplx service present
+      (False, message string) if not
+
+    """
+    try:
+        # with about_time() as atime:
+        then = time()
+        # _ = httpx.post(f'{url}/translate', json=data)
+        # async with httpx.AsyncClient(verify=False) as client:
+        async with aiohttp.ClientSession() as client:
+            _ = await client.post(
+                f"{url}/translate",
+                json=data,
+                timeout=timeout,
+                ssl=False,
+            )
+            _.raise_for_status()
+            text = await _.text()
+        check = "世界" in text or "你好" in text
+        if not check:
+            raise Exception(f"{url}/translate returns {text=}")
+
+        # latency_or_error: Union[float, str] = round(atime.duration, 2)
+        latency_or_error: Union[float, str] = round(time() - then, 2)
+    except TimeoutError:
         check, latency_or_error = False, "Timed out"
     except Exception as exc:
-        logger.trace(f"{exc=}")
+        logger.trace(f"{url}, {exc=}")
         check, latency_or_error = False, str(exc)[:70]
 
     # return check, latency_or_error
@@ -130,8 +182,9 @@ if __name__ == "__main__":
 
     url_ = "".join(sys.argv[1:2])
     if not url_:
-        url_ = "http://acone:8080/"
         url_ = "https://api.deeplx.org"
+        url_ = "http://acone:8080"  # deeplx-urls?
+        url_ = "http://acone:1188"
     # wake it up
     _ = check_deeplx(url_)
     print(check_deeplx(url_))

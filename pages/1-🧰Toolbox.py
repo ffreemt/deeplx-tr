@@ -21,6 +21,10 @@ if "ns" not in st.session_state:
 
 if sstate.ns.get("text") is None:
     sstate.ns.text = [""]
+if sstate.ns.get("dxtext") is None:
+    sstate.ns.dxtext = [""]
+if sstate.ns.get("lmtext") is None:
+    sstate.ns.lmtext = [""]
 if sstate.ns.get("filename") is None:
     sstate.ns.filename = "temp.txt"
 if sstate.ns.get("flag") is None:
@@ -53,17 +57,46 @@ else:
         placeholder.write("Move the red dot to picke a para to work with")
         sstate.ns.flag = False  # just show once
 
-para_text = st.empty()
+slider = st.empty()
+row_text = st.columns([1, 10])
 
-sn = st.select_slider(
+with row_text[1]:
+    para_text = st.empty()
+
+# _ = """
+sn0 = slider.select_slider(
     "Select a para",
-    # "",
     options=range_,
-    # value=0,
+    # value=sstate.ns.sn,
 )
+# """
+
+css = """
+<style>
+    .stNumberInput label {
+        display: none;
+    }
+    .stSlider label {
+        display: none;
+    }
+</style>
+"""
+
+# show text dxtext lmtext
+with row_text[0]:
+    sn = st.number_input("sn", min_value=0, max_value=len_ - 1, value=sn0, key="keysn")
 if 0 <= sn < len_:
-    para_text.write(f"{sn}, {sstate.ns.text[sn]}")
+    # para_text.write(f"{sn}, {sstate.ns.text[sn]}")
+    para_text.write(
+        sstate.ns.text[sn] +
+        "\n\n" +
+        sstate.ns.dxtext[sn] +
+        "\n\n" +
+        sstate.ns.lmtext[sn]
+    )
     sstate.ns.sn = sn
+
+st.markdown(css, unsafe_allow_html=True)
 
 _ = "Ask a question (e.g., x 什么意思) or make a request (e.g. 翻成中文)"
 if prompt := st.chat_input(_):
@@ -131,8 +164,8 @@ with row_agents[1]:
             improve = f"{exc=}, net hiccup? try again"
             placeholder.text("uh oh... try again")
 
-        improve_text.markdown(dxtext + '\n\n' + improve, unsafe_allow_html=True)
-        
+        improve_text.markdown(improve, unsafe_allow_html=True)
+
 with row_agents[2]:
     if st.button("reflectlm", type="primary", key="reflectlm"):
         placeholder.empty()
@@ -175,4 +208,4 @@ with row_agents[3]:
             improve = f"{exc=}, net hiccup? try again"
             placeholder.text("uh oh... try again")
 
-        improve_text.markdown(lmtext + '\n\n' + improve, unsafe_allow_html=True)
+        improve_text.markdown(improve, unsafe_allow_html=True)

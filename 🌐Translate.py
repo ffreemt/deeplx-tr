@@ -65,33 +65,42 @@ if "dataframe" not in sstate:
 # def toggle_uploaded_file():
 row0 = st.columns(4)
 with row0[0]:
-    if st.toggle("toggle", value=True):
-        uploaded_file = st.file_uploader("Choose a file", accept_multiple_files=False)
-        if uploaded_file is not None:
-            # To read file as bytes:
-            bytes_data = uploaded_file.getvalue()
-            # st.write(bytes_data)
+    # if st.toggle("toggle", value=True):
+    uploaded_file = st.file_uploader("Choose a file", accept_multiple_files=False)
+    if uploaded_file is not None:
+        # To read file as bytes:
+        bytes_data = uploaded_file.getvalue()
+        # st.write(bytes_data)
 
-            # To convert to a string based IO:
-            stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
-            # st.write(stringio)
+        # To convert to a string based IO:
+        stringio = StringIO(uploaded_file.getvalue().decode("utf-8"))
+        # st.write(stringio)
 
-            # To read file as string:
-            string_data = stringio.read()
-            # Can be used wherever a "file-like" object is accepted:
-            # dataframe = pd.read_csv(uploaded_file)
-            # dataframe = loadtext(string_data)
+        # To read file as string:
+        string_data = stringio.read()
+        # Can be used wherever a "file-like" object is accepted:
+        # dataframe = pd.read_csv(uploaded_file)
+        # dataframe = loadtext(string_data)
 
-            texts = [elm for elm in string_data.splitlines() if elm.strip()]
-            if "text" not in st.session_state:
-                st.session_state["text"] = texts
-            sstate.ns.text = texts
+        texts = [elm for elm in string_data.splitlines() if elm.strip()]
+        if "text" not in st.session_state:
+            st.session_state["text"] = texts
+        sstate.ns.text = texts
 
-            dataframe = pd.DataFrame(zip_longest(sstate.ns.text, [], [], fillvalue=""), columns=["text", "dxtext", "lmtext"])
-            sstate.ns.dataframe = dataframe
+        dataframe = pd.DataFrame(zip_longest(sstate.ns.text, [], [], fillvalue=""), columns=["text", "dxtext", "lmtext"])
+        sstate.ns.dataframe = dataframe
 
-            sstate.ns.filename = uploaded_file.name
-            # st.write("Filename: ", sstate.ns.filename)
+        sstate.ns.filename = uploaded_file.name
+        # st.write("Filename: ", sstate.ns.filename)
+
+hide_label = """
+<style>
+    .st-emotion-cache-1fttcpj {
+        display: none;
+    }
+</style>
+"""
+st.markdown(hide_label, unsafe_allow_html=True)
 
 if sstate.ns.get("filename") is not None:
     if "temp.txt" not in sstate.ns.filename:
