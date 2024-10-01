@@ -32,7 +32,8 @@ def build(c, name=name_def):
 def scrape_deeplx(c):
     """Scrape shodan/shoda ip."""
     # c.run(r"python src\deeplx_tr\scrape_deeplx_shodan.py")
-    c.run("rye run python -m deeplx_tr.scrape_deeplx_shodan")
+    # c.run("rye run python -m deeplx_tr.scrape_deeplx_shodan")
+    c.run("uv run python -m deeplx_tr.scrape_deeplx_shodan")
 
 
 @task()
