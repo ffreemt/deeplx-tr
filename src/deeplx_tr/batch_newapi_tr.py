@@ -7,9 +7,7 @@ also azure openai
 # pylint: disable=too-many-statements, too-many-branches, too-many-arguments
 
 import asyncio
-import datetime
 from collections import defaultdict, deque
-from contextlib import suppress
 from pathlib import Path
 from random import randrange
 from time import monotonic
@@ -387,7 +385,7 @@ if __name__ == "__main__":
 
     # texts_list = loadtext(r"tests/test.txt")
 
-    _ = """
+    _ = r"""
     today = f"{datetime.date.today()}"
     with suppress(Exception):
         texts_list = loadtext(rf"C:\syncthing\00xfer\2021it\{today}.txt", splitlines=1)

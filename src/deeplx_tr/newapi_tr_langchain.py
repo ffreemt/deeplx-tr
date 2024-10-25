@@ -9,6 +9,7 @@ also azure openai
 
 import asyncio
 import os
+from typing import Union
 
 from dotenv import load_dotenv
 from httpx import Timeout
@@ -16,9 +17,9 @@ from langchain.schema import AIMessage, BaseMessage, HumanMessage, SystemMessage
 from langchain_openai import AzureChatOpenAI, ChatOpenAI
 from loguru import logger
 from pydantic import BaseModel  # , SecretStr
+
 # from pydantic.v1.types import SecretStr
 from pydantic.types import SecretStr
-from typing import Union
 from ycecream import y
 
 # from deeplx_tr.newapi_models import newapi_models
@@ -66,6 +67,7 @@ async def newapi_tr_langchain(
     **kw: additional params, e.g., temperature, repetition_penalty
 
     qwen-max-longcontext-hf
+
     """
     # get in the same format as API_KEY
     try:

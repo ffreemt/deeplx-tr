@@ -192,14 +192,6 @@ with row0[3]:
     else:
         logger.debug(">>> ")
     """
-    st.download_button(
-        label="Download csv",
-        data=csvdata,
-        file_name=f"{Path(sstate.ns.filename).stem}-tr.txt",
-        mime="text/csv",
-        # type="primary",
-    )
-
     # .docx     application/vnd.openxmlformats-officedocument.wordprocessingml.document
     # "application/octet-stream"
     docxdata = convert_df2docx(sstate.ns.dataframe)
@@ -210,6 +202,14 @@ with row0[3]:
         mime="docx",
         # type="primary",
     )
+    st.download_button(
+        label="Download csv",
+        data=csvdata,
+        file_name=f"{Path(sstate.ns.filename).stem}-tr.txt",
+        mime="text/csv",
+        # type="primary",
+    )
+
 
 dataframe = pd.DataFrame(zip_longest(sstate.ns.text, sstate.ns.dxtext, sstate.ns.lmtext, fillvalue=""), columns=["text", "dxtext", "lmtext"])
 sstate.ns.dataframe = dataframe

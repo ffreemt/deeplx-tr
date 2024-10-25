@@ -57,8 +57,8 @@ else:
         placeholder.write("Move the red dot to picke a para to work with")
         sstate.ns.flag = False  # just show once
 
-slider = st.empty()
 row_text = st.columns([1, 10])
+slider = st.empty()
 
 with row_text[1]:
     para_text = st.empty()

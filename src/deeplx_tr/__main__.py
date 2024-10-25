@@ -1,17 +1,14 @@
 """Prep __main__.py."""
 
 # pylint: disable=invalid-name
-import os
-import sys
 from typing import List, Optional
 
 import pyperclip
 import typer
 from loguru import logger
+
 # from set_loglevel import set_loglevel
-
 from deeplx_tr import __version__, deeplx_tr, lang_list
-
 
 app = typer.Typer(
     name="deeplx-tr",

@@ -13,7 +13,6 @@ from typing import List, Union
 from docx import Document
 from docx.enum.style import WD_STYLE_TYPE
 from docx.enum.text import WD_COLOR_INDEX
-
 from docx.oxml.ns import qn
 from docx.shared import Pt, RGBColor
 from loadtext import loadtext

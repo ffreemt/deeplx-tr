@@ -1,3 +1,4 @@
+"""Info."""
 from taipy.gui import Markdown, navigate
 
 text = "Welcome to deeplx/llm tools for translation!"

@@ -71,7 +71,7 @@ def llm_tool1(c):
     default=True,
 )
 def batch_deeplx_tr(c):
-    """rye run python run-batch_tr.py (deeplx_tr.batch_tr)."""
+    """Run rye run python run-batch_tr.py (deeplx_tr.batch_tr)."""
     c.run("rye run python run_batch_deeplx_tr.py")
 
 
@@ -85,10 +85,10 @@ def batch_newapi_tr(c):
     # c.run("py newapi_tr.py")
     c.run("uv run python -m deeplx_tr.batch_newapi_tr")
 
-
 @task()
 def trtext2docx(c):
-    """Run trtext2docx.
+    """
+    Run trtext2docx.
 
     rye run python -m deeplx_tr.trtext2docx
     """
