@@ -26,18 +26,26 @@ models:
   - !!python/tuple ['gpt-4o-mini', 'https://duck2api2.dattw.eu.org', 'any']
   - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-service-2nsfpsd6ca-uc.a.run.app', 'any']
   - !!python/tuple ['gpt-4o-mini', 'https://duck2api-service-2nsfpsd6ca-uc.a.run.app', 'any']
+
+  - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-service-950587817221.us-central1.run.app', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://duck2api-service-950587817221.us-central1.run.app', 'any']
+
   - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-lovat.vercel.app', 'any']
   - !!python/tuple ['gpt-4o-mini', 'https://duck2api-lovat.vercel.app', 'any']
   - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-u3l3laz3.b4a.run', 'any']
-  - !!python/tuple ['gpt-4o-mini', 'https://duck2api-u3l3laz3.b4a.run', 'any']
+  # google broswer github
+  - !!python/tuple ['gpt-4o-mini',
+ 'https://duck2api-u3l3laz3.b4a.run', 'any']
+  # google broswer yc
   - !!python/tuple ['gpt-3.5-turbo', 'https://duck2api-3a2b982t.b4a.run', 'any']
   - !!python/tuple ['gpt-4o-mini', 'https://duck2api-3a2b982t.b4a.run', 'any']
   # northflank google yc
-  # - !!python/tuple ['gpt-3.5-turbo', '"https://p01--duck2api--b69bn8cbbs7k.code.run"', 'any']
-  # - !!python/tuple ['gpt-4o-mini', '"https://p01--duck2api--b69bn8cbbs7k.code.run"', 'any']
+  # - !!python/tuple ['gpt-3.5-turbo', 'https://p01--duck2api--b69bn8cbbs7k.code.run', 'any']
+  # - !!python/tuple ['gpt-4o-mini', 'https://p01--duck2api--b69bn8cbbs7k.code.run', 'any']
   - !!python/tuple ['gpt-3.5-turbo', 'https://yc--northflank-duckapi--b69bn8cbbs7k.code.run', 'any']
   - !!python/tuple ['gpt-4o-mini', 'https://yc--northflank-duckapi--b69bn8cbbs7k.code.run', 'any']
 
+  # acone newapi
   # - gpt-3.5-turbo-grun
   # - gpt-4o-grun
   # - gpt-3.5-turbo-chat2api
@@ -48,6 +56,8 @@ models:
   # - gpt-3.5-turbo-oracle
   # - gpt-4o-oracle
   - gpt-3.5-turbo-d2a
+
+  # https://huggingface.co/spaces/mikeee/redteam-qwen-free-api?logs=container
   - qwen-turbo-hf
   - qwen-max-hf
   - qwen-max-longcontext-hf
@@ -71,10 +81,10 @@ models:
   # - gpt-4-turbo-uuci
   # - gpt-4-uuci
   # - claude-3.5-sonnet-uuci
-  - gpt-4o-mini-uuci
-  - gpt-4o-furry
+  # - gpt-4o-mini-uuci
+  # - gpt-4o-furry
   # - gpt-4-turbo-2024-04-09-furry
-  - gpt-3.5-turbo-furry
+  # - gpt-3.5-turbo-furry
   # - gpt-3.5-turbo-bh
   # - gpt-4-turbo-preview-bh
   # - gpt-4-bh
@@ -104,4 +114,42 @@ models:
   - !!python/tuple ['gpt-3.5-turbo', 'https://litellm.dattw.eu.org', 'any']
   - !!python/tuple ['deepseek-chat', 'https://litellm.dattw.eu.org', 'any']
   - !!python/tuple ['gpt-4o-mini', 'https://litellm.dattw.eu.org', 'any']
-  - !!python/tuple ['claude-3.5-sonnet', 'https://litellm.dattw.eu.org', 'any']
+
+  - !!python/tuple ['gemini-1.5-pro-k1', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k1', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k2', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k2', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k3', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k3', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k4', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k4', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k5', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k5', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k6', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k6', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k7', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k7', 'https://litellm.dattw.eu.org', 'any']
+
+  - !!python/tuple ['gemini-1.5-pro', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash', 'https://litellm.dattw.eu.org', 'any']
+
+  # - !!python/tuple ['claude-3.5-sonnet', 'https://litellm.dattw.eu.org', 'any']
+  # - !!python/tuple ['gemini-pro', 'https://litellm.dattw.eu.org', 'any']
+  # - !!python/tuple ['translate-ultra', 'https://api.5sb.org', 'sk-DFYWORkB21W0ybs6C50e43CeB6Ae4eF1AfEcC2E9F8F3A9Fb']
+
+  # nai typegpt
+  # - !!python/tuple ['gpt-4o', 'https://nai.typegpt.net', 'sk-ogvBZUrk1B1FSswp7d73Bc14D4Eb4eFeA3565269A4B2A356']
+  # - !!python/tuple ['gemini-1.5-flash', 'https://nai.typegpt.net', 'sk-ogvBZUrk1B1FSswp7d73Bc14D4Eb4eFeA3565269A4B2A356']
+  # - !!python/tuple ['gemini-pro', 'https://nai.typegpt.net', 'sk-ogvBZUrk1B1FSswp7d73Bc14D4Eb4eFeA3565269A4B2A356']
+# https://linux.do/t/topic/64767
+  # - !!python/tuple ['o1-mini', 'https://api.sgai.cc', ' sk-Gcs0YNcfZYGPbR7uB6953c704dEc4580806b4f13052a99D5']
+  # - !!python/tuple ['o1-preview','https://api.sgai.cc','sk-Gcs0YNcfZYGPbR7uB6953c704dEc4580806b4f13052a99D5']
+  # - !!python/tuple ['gemini-1.5-pro','https://api.sgai.cc','sk-Gcs0YNcfZYGPbR7uB6953c704dEc4580806b4f13052a99D5']
+  # - !!python/tuple ['gemini-1.5-flash-latest','https://api.sgai.cc','sk-Gcs0YNcfZYGPbR7uB6953c704dEc4580806b4f13052a99D5']
+
+  # blackbox2api https://linux.do/t/topic/236936/178 https://mikeee-blackbox2api.hf.space/api/v1 316287378
+  - !!python/tuple ['gemini-1.5-pro', 'https://mikeee-blackbox2api.hf.space/api', '316287378']
+
+  # new-api in acone, use gemini.dattw.eu.org (gemini reverse proxy)
+  - gemini-1.5-pro-dattw
+  - gemini-1.5-pro-dattw1

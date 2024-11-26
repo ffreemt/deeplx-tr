@@ -11,8 +11,14 @@ from lmtr_agents import (
 from loguru import logger
 from deeplx_tr.color_diff import color_diff, plussign_diff
 
-llm = ChatOpenAI(base_url="https://litellm.dattw.eu.org/v1", api_key="NA")
-
+llm = ChatOpenAI(
+    base_url="https://litellm.dattw.eu.org/v1",
+    api_key="NA",
+    # model="gemini-pro",
+    # model="deepseek-chat",
+    model="gemini-1.5-pro",
+)
+# llm.invoke("Enbrace什么意思")
 st.set_page_config(page_title="Translate Agents", page_icon="🧰")
 
 sstate = st.session_state
