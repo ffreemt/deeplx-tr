@@ -1,10 +1,13 @@
 """Info."""
+
 from taipy.gui import Markdown, navigate
 
 text = "Welcome to deeplx/llm tools for translation!"
 
+
 def go_home(state):
     navigate(state, "main")
+
 
 # <|navbar|>
 # info_md = """

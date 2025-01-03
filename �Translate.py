@@ -16,7 +16,8 @@ from deeplx_tr.batch_newapi_tr import batch_newapi_tr
 from deeplx_tr.trtext2docx import trtext2docx
 from loguru import logger
 
-logger.trace(" ------------------------ ")
+logger.trace(" session start ------------------------ ")
+logger.info(" session start ------------------------ ")
 
 st.set_page_config(
     page_title="Translate",
@@ -29,18 +30,26 @@ st.set_page_config(
 sstate = st.session_state
 
 # load streamlit_sstate_cache.json if present
+# cache is on the server, only useful when the app restarts
 cache_file = "streamlit_sstate_cache.json"
 if "ns" not in sstate:
     try:
         sstate["ns"] = Box(json.loads(Path(cache_file).read_text("utf8")))
-        logger.info(f" Loading {cache_file} to st.session_state['ns'] ")
+
+        # also update sstate.dataframe and view
+        sstate["dataframe"] = pd.DataFrame(sstate.ns.json)
+
+        logger.info(f"{sstate.dataframe=}")
+        logger.info(f" {cache_file} oaded to st.session_state['ns'] ")
     except Exception:
         sstate["ns"] = Box()
 
 
 # to save back:
-def save_sstate_ns():
-    Path(cache_file).write_text(json.dumps(sstate["ns"]))
+@st.cache_data
+def save_sstate_ns(obj):
+    # Path(cache_file).write_text(json.dumps(sstate["ns"]))
+    Path(cache_file).write_text(json.dumps(obj))
 
 
 if sstate.ns.get("text") is None:
@@ -108,10 +117,9 @@ with row0[0]:
         sstate.ns.filename = uploaded_file.name
         # st.write("Filename: ", sstate.ns.filename)
         try:
-            save_sstate_ns()
+            save_sstate_ns(sstate["ns"])
         except Exception as e:
             logger.error(e)
-
 
 hide_label = """
 <style>
@@ -210,8 +218,9 @@ def convert_df2docx(df):
     return bio.getvalue()
 
 
-csvdata = convert_df(sstate.dataframe)
 
+csvdata = convert_df(sstate.dataframe)
+docxdata = convert_df2docx(sstate.dataframe)
 with row0[3]:
     _ = """
     if st.button("dl-file", type="primary", key="dl-file"):
@@ -222,7 +231,6 @@ with row0[3]:
     """
     # .docx     application/vnd.openxmlformats-officedocument.wordprocessingml.document
     # "application/octet-stream"
-    docxdata = convert_df2docx(sstate.dataframe)
     st.download_button(
         label="Download docx",
         data=docxdata,
@@ -230,6 +238,7 @@ with row0[3]:
         mime="docx",
         # type="primary",
     )
+
     st.download_button(
         label="Download csv",
         data=csvdata,
@@ -246,7 +255,10 @@ dataframe = pd.DataFrame(
 sstate.dataframe = dataframe
 
 logger.trace(f"{sstate.dataframe=}")
+logger.info(f"{sstate.dataframe=}")
 
+logger.info(" st.data_editor ...")
+# row1 view
 # st.data_editor(sstate.dataframe)
 st.data_editor(
     sstate.dataframe,
@@ -302,4 +314,5 @@ else:
 
 # st.button("Regenerate")
 
-logger.trace(" ######################## ")
+logger.info(" ######################## session end ")
+logger.trace(" ######################## session end ")

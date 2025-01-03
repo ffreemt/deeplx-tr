@@ -8,16 +8,18 @@ invoke build
 invoke --help build
 
 """
+
 from invoke import task
 
 name_def = "xxx"
 
+
 @task(
     # default=True,
-    help={'name': "Name of the person to say hi to."},
+    help={"name": "Name of the person to say hi to."},
 )
 def build(c, name=name_def):
-# def build(c):
+    # def build(c):
     """
     Build tests.
 
@@ -25,6 +27,7 @@ def build(c, name=name_def):
     """
     c.run(f"echo sphinx-build docs docs/_build {name}")
     # c.run(f"echo sphinx-build docs docs/_build ")
+
 
 @task(
     # default=True,
@@ -43,10 +46,12 @@ def pytest1(c):
     # c.run("rye run pytest -s -k newapi_tr_simple")
     c.run("rye run pytest -s -k newapi_tr1")
 
+
 @task
 def pytest2(c):
     """Test batch_newapi_tr_langchain simple."""
     c.run("rye run pytest -s -k newapi_tr2_langchain")
+
 
 @task
 def llm_tool(c):
@@ -57,6 +62,7 @@ def llm_tool(c):
     """
     c.run(r"""nodemon -w llm_tool.py -x rye run taipy run llm_tool.py""")
 
+
 @task
 def llm_tool1(c):
     """
@@ -65,6 +71,15 @@ def llm_tool1(c):
     nodemon -x uv run streamlit run 🌐Translate.py
     """
     c.run(r"""nodemon -x uv run streamlit run 🌐Translate.py""")
+
+@task
+def llm_tool2(c):
+    """
+    Start marimo llm-tool dev work: uv run marimo edit marimo_tr.py.
+
+    uv run marimo edit marimo_tr.py
+    """
+    c.run(r"""uv run marimo edit marimo_tr.py""")
 
 
 @task(
@@ -78,12 +93,24 @@ def batch_deeplx_tr(c):
 @task()
 def batch_newapi_tr(c):
     """
-    Test batch_newapi_tr.
+    Run batch_newapi_tr.
 
     similar to check_models.py.
     """
     # c.run("py newapi_tr.py")
     c.run("uv run python -m deeplx_tr.batch_newapi_tr")
+
+
+@task()
+def batch_llm_tr(c):
+    """
+    Run batch_llm_tr.
+
+    similar to batch_newapi_tr.py.
+    """
+    # c.run("py newapi_tr.py")
+    c.run("uv run python -m deeplx_tr.batch_llm_tr")
+
 
 @task()
 def trtext2docx(c):

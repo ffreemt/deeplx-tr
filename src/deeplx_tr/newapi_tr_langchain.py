@@ -38,6 +38,7 @@ load_dotenv()
 BASE_URL = os.getenv("BASE_URL", "")
 API_KEY = SecretModel(secret=os.getenv("API_KEY", ""))
 
+
 async def newapi_tr_langchain(
     text: str,
     model: str = "gpt-3.5-turbo",
@@ -154,25 +155,25 @@ async def main():
     y(trtext)
 
     # base_url: 'http://newapi.dattw.eu.org/v1'
-    model='qwen-max-longcontext-hf'
+    model = "qwen-max-longcontext-hf"
     trtext = await newapi_tr_langchain(text, model=model)
     y(model, trtext)
 
     # odd cases::
     # llama3-70b-8192-groq
-    text = '''”The storage cloud manages all the tiering transparently from the compute servers,” Umamageswaran said. '''
-    model="llama3-70b-8192-groq"
+    text = """”The storage cloud manages all the tiering transparently from the compute servers,” Umamageswaran said. """
+    model = "llama3-70b-8192-groq"
     trtext = await newapi_tr_langchain(text, model=model)
     y(model, trtext)
     # trtext: '«»'
 
-    text = '''### Automated tiering'''
+    text = """### Automated tiering"""
     trtext = await newapi_tr_langchain(text, model=model)
     y(model, trtext)
     # trtext: '###'
 
-    text = '''Oracle said the result is that Exadata Exascale combines the performance of dynamic random-access memory, the input/output performance of flash storage and the capacity of disks.'''
-    model = 'glm-v1'
+    text = """Oracle said the result is that Exadata Exascale combines the performance of dynamic random-access memory, the input/output performance of flash storage and the capacity of disks."""
+    model = "glm-v1"
     trtext = await newapi_tr_langchain(text, model=model)
     y(model, trtext)
     # newapi_tr trtext: 输入/输出性��以及

@@ -1,17 +1,14 @@
 """Test newapi_tr."""
-import os
-import asyncio
-
-import pytest
 
 # this seems to hang the test
 import os  # noqa
-from deeplx_tr.newapi_tr import newapi_tr
-# from deeplx_tr.newapi_tr_langchain import newapi_tr_langchain as newapi_tr
 
-from python_run_cmd import run_cmd
-from ycecream import y
+import pytest
+from deeplx_tr.newapi_tr import newapi_tr
+
+# from deeplx_tr.newapi_tr_langchain import newapi_tr_langchain as newapi_tr
 from python_run_cmd import run_cmd  # noqa
+from ycecream import y
 
 y.configure(sln=1)
 
@@ -33,11 +30,10 @@ def teardown_module1():
     print("module end here 3")
 
 
-@pytest.fixture(scope='module', autouse=True)
+@pytest.fixture(scope="module", autouse=True)
 def kill_self():
     yield
 
-    from time import sleep
     # sleep(3)
     # print(" kill self")
     # run_cmd(f"taskkill /f /pid {os.getpid()}")
@@ -80,6 +76,7 @@ async def test_newapi_tr2_langchain_d2a_cloudrun():
 
     # assert any(elm in str(trtext) for elm in ["测", "个", "翻译"])
     assert any(elm in trtext for elm in ["测", "个"])
+
 
 @pytest.mark.timeout(15)
 @pytest.mark.asyncio

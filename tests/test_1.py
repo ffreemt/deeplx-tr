@@ -1,8 +1,7 @@
 """Test newapi_tr."""
-import os
-import asyncio
 
 import pytest
+
 # from deeplx_tr.newapi_tr import newapi_tr
 from deeplx_tr.newapi_tr_langchain import newapi_tr_langchain as newapi_tr
 
@@ -12,7 +11,7 @@ text = "Test this and that."
 # @pytest.mark.timeout(15)
 @pytest.mark.asyncio
 async def test_1():
-# def test_1(event_loop):
+    # def test_1(event_loop):
     """
     Test newapi_tr simple.
 

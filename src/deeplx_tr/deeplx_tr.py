@@ -5,6 +5,7 @@ Supported languages: 'de', 'en', 'es', 'fr', 'it', 'ja', 'ko', 'nl',
   'pl', 'pt', 'ru', 'zh','bg', 'cs', 'da', 'el', 'et', 'fi', 'hu', 'lt',
   'lv', 'ro', 'sk', 'sl', 'sv'
 """
+
 # pylint: disable=invalid-name, line-too-long, broad-exception-raised
 # pip install set-loglevel loguru icecream httpx pyperclip typer
 # pip install nuitka ordered-set
@@ -172,7 +173,9 @@ def deeplx_tr(
     try:
         # response = requests.post(url, post_str, headers={'Content-Type': 'application/json'})
         response = httpx.post(
-            url, data=post_str, headers={"Content-Type": "application/json"}  # type: ignore
+            url,
+            data=post_str,
+            headers={"Content-Type": "application/json"},  # type: ignore
         )
 
         # response = requests.post(url, post_data, headers={'Content-Type': 'application/json'})

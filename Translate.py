@@ -2,7 +2,7 @@
 
 import asyncio
 import io
-from io import StringIO
+from io import StringIO, BytesIO
 from itertools import zip_longest
 import json
 from pathlib import Path
@@ -16,7 +16,9 @@ from deeplx_tr.batch_newapi_tr import batch_newapi_tr
 from deeplx_tr.trtext2docx import trtext2docx
 from loguru import logger
 
-logger.trace(" ------------------------ ")
+logger.trace(" Trnaslate session start ------------------------ ")
+logger.debug(" Trnaslate session start ------------------------ ")
+logger.info(" Trnaslate session start ------------------------ ")
 
 st.set_page_config(
     page_title="Translate",
@@ -29,24 +31,33 @@ st.set_page_config(
 sstate = st.session_state
 
 # load streamlit_sstate_cache.json if present
+# cache is on the server, only useful when the app restarts
 cache_file = "streamlit_sstate_cache.json"
 if "ns" not in sstate:
     try:
         sstate["ns"] = Box(json.loads(Path(cache_file).read_text("utf8")))
-        logger.info(f" Loading {cache_file} to st.session_state['ns'] ")
+
+        # also update sstate.dataframe and view
+        sstate["dataframe"] = pd.DataFrame(sstate.ns.json)
+
+        logger.info(f"{sstate.dataframe=}")
+        logger.info(f" {cache_file} oaded to st.session_state['ns'] ")
     except Exception:
         sstate["ns"] = Box()
 
 
-# to save back:
-def save_sstate_ns():
-    Path(cache_file).write_text(json.dumps(sstate["ns"]))
+@st.cache_data
+def save_sstate_ns(obj):
+    """Save back."""
+    # Path(cache_file).write_text(json.dumps(sstate["ns"]))
+    Path(cache_file).write_text(json.dumps(obj))
 
 
 if sstate.ns.get("text") is None:
     sstate.ns.text = [""]
 if sstate.ns.get("dxtext") is None:
     sstate.ns.dxtext = [""]
+    logger.debug("\n   ==> sstate.ns.dxtext = [''] ")
 if sstate.ns.get("lmtext") is None:
     sstate.ns.lmtext = [""]
 
@@ -67,8 +78,8 @@ if sstate.ns.get("json") is None:
 if sstate.ns.get("toolbox_pos") is None:
     sstate.ns.toolbox_pos = 0
 
-# y(sstate.ns)  # this does not work
 logger.trace(f"{sstate.ns.keys()}")
+logger.debug(f">>>>>>>>>>> {sstate.ns=}")
 
 fn_placeholder = st.sidebar.empty()
 placeholder = st.sidebar.empty()
@@ -95,23 +106,41 @@ with row0[0]:
         # dataframe = loadtext(string_data)
 
         texts = [elm for elm in string_data.splitlines() if elm.strip()]
-        sstate.ns.text = texts
 
-        dataframe = pd.DataFrame(
-            zip_longest(sstate.ns.text, [], [], fillvalue=""),
-            columns=["text", "dxtext", "lmtext"],
-        )
+        # y(texts[:3])
+        logger.trace(texts[:3])
+        logger.debug(texts[:3])
 
-        # cant only save list
-        sstate.ns.json = dataframe.to_json()
+        # not empty
+        if texts:
+            # check first line
+            if "dxtext" in texts[0] and "lmtext" in texts[0]:
+                # import csv
+                dataframe = pd.read_csv(BytesIO(bytes_data), index_col='Unnamed: 0')
+            else:
+                # normal plantext file
+                sstate.ns.text = texts
+
+                dataframe = pd.DataFrame(
+                    zip_longest(sstate.ns.text, [], [], fillvalue=""),
+                    columns=["text", "dxtext", "lmtext"],
+                )
+            # update sstate.ns sstate.dataframe
+            sstate.dataframe = dataframe
+            sstate.ns.text = dataframe.text.values.tolist()
+            sstate.ns.text = dataframe.text.values.tolist()
+            sstate.ns.dxtext = dataframe.dxtext.values.tolist()
+            sstate.ns.lmtext = dataframe.lmtext.values.tolist()
+
+            # cant only save list
+            sstate.ns.json = dataframe.to_json()
 
         sstate.ns.filename = uploaded_file.name
         # st.write("Filename: ", sstate.ns.filename)
         try:
-            save_sstate_ns()
+            save_sstate_ns(sstate.ns)
         except Exception as e:
             logger.error(e)
-
 
 hide_label = """
 <style>
@@ -126,8 +155,12 @@ if sstate.ns.get("filename") is not None:
     if "temp.txt" not in sstate.ns.filename:
         fn_placeholder.text(f"file: {sstate.ns.filename}")
 
-with row0[1]:
-    if st.button("dxtr", type="primary", key="dxtr"):
+with row0[1]:  # dxtr
+    logger.debug(f"\n   dxtr ---dxtr {sstate.dataframe=}")
+    logger.debug(f"{sstate.ns.dxtext=}")
+    if st.button(f"dxtr", type="primary", key="dxtr"):
+        logger.debug(f"\ndxtr ---dxtr {sstate.dataframe=}")
+        logger.debug(f"{sstate.ns.dxtext=}")
         # st.write(randrange(10))
         placeholder.text("diggin dxtr...")
         then = monotonic()
@@ -154,15 +187,23 @@ with row0[1]:
             columns=["text", "dxtext", "lmtext"],
         )
         sstate.dataframe = dataframe
+        logger.trace(f"{sstate.dataframe=}")
+        logger.debug(f"\n   dxtr ---dxtr {sstate.dataframe=}")
+        logger.debug(f"{sstate.ns.dxtext=}")
 
-with row0[2]:
+with row0[2]:  # lmtr
+    logger.debug(f"\n   lmtr ---lmtr {sstate.dataframe=}")
+    logger.debug(f"{sstate.ns.dxtext=}")
     if st.button("lmtr", type="primary", key="lmtr"):
+        logger.debug("\nlmtr ---lmtr {sstate.dataframe=}")
+        logger.debug("{sstate.ns.dxtext=}")
         placeholder.empty()
         placeholder.text("diggin lmtr...")
         then = monotonic()
         err = "there is a problem with lm translate, notify the dev of this tool if possible"
         try:
             trtext_2 = asyncio.run(batch_newapi_tr(sstate.ns.text))
+            placeholder.text(f"done {monotonic() - then:.2f} ")
         except Exception as e:
             logger.error(e)
             err = str(e)
@@ -176,7 +217,6 @@ with row0[2]:
             lmtext = [err]
         sstate.ns.lmtext = lmtext
 
-        placeholder.text(f"done {monotonic() - then:.2f} ")
         dataframe = pd.DataFrame(
             zip_longest(
                 sstate.ns.text, sstate.ns.dxtext, sstate.ns.lmtext, fillvalue=""
@@ -185,6 +225,9 @@ with row0[2]:
         )
         sstate.dataframe = dataframe
 
+        logger.trace(f"{sstate.dataframe=}")
+        logger.debug(f"\n    lmtr ---lmtr {sstate.dataframe=}")
+        logger.debug(f"{sstate.ns.dxtext=}")
 
 @st.cache_data
 def convert_df(df):
@@ -205,13 +248,14 @@ def convert_df2docx(df):
     # return file_content
 
     # https://discuss.streamlit.io/t/downloading-string-as-docx-format-with-st-download-button/75075
-    bio = io.BytesIO()
+    bio = BytesIO()
     file_content.save(bio)
     return bio.getvalue()
 
 
-csvdata = convert_df(sstate.dataframe)
 
+csvdata = convert_df(sstate.dataframe)
+docxdata = convert_df2docx(sstate.dataframe)
 with row0[3]:
     _ = """
     if st.button("dl-file", type="primary", key="dl-file"):
@@ -222,7 +266,6 @@ with row0[3]:
     """
     # .docx     application/vnd.openxmlformats-officedocument.wordprocessingml.document
     # "application/octet-stream"
-    docxdata = convert_df2docx(sstate.dataframe)
     st.download_button(
         label="Download docx",
         data=docxdata,
@@ -230,6 +273,7 @@ with row0[3]:
         mime="docx",
         # type="primary",
     )
+
     st.download_button(
         label="Download csv",
         data=csvdata,
@@ -238,15 +282,20 @@ with row0[3]:
         # type="primary",
     )
 
-
+_ = """
 dataframe = pd.DataFrame(
     zip_longest(sstate.ns.text, sstate.ns.dxtext, sstate.ns.lmtext, fillvalue=""),
     columns=["text", "dxtext", "lmtext"],
 )
 sstate.dataframe = dataframe
+# """
 
 logger.trace(f"{sstate.dataframe=}")
+logger.trace(f"{sstate.dataframe.dxtext.values.tolist()=}")
+# logger.info(f"{sstate.dataframe=}")
 
+logger.info(" st.data_editor ...")
+# row1 view
 # st.data_editor(sstate.dataframe)
 st.data_editor(
     sstate.dataframe,
@@ -302,4 +351,5 @@ else:
 
 # st.button("Regenerate")
 
-logger.trace(" ######################## ")
+logger.info(" Translate ######################## session end ")
+logger.trace(" Translate ######################## session end ")

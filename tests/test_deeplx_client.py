@@ -4,8 +4,8 @@ Test deeplx_client.
 Use -s or --capture=no e.g., pytest -s test_foobar.py to show output
 """
 
-from loguru import logger
 from deeplx_tr.deeplx_client import deeplx_client as cl
+from loguru import logger
 
 
 def test_deeplx_client_simple_sync():

@@ -58,18 +58,19 @@ models:
   - gpt-3.5-turbo-d2a
 
   # https://huggingface.co/spaces/mikeee/redteam-qwen-free-api?logs=container
-  - qwen-turbo-hf
-  - qwen-max-hf
-  - qwen-max-longcontext-hf
-  - qwen-plus-hf
-  - qwen-vl-max-hf
-  - qwen-vl-plus-hf
-  - qwen-v1-hf
-  - qwen-v1-vision-hf
-  - deepseek-chat
-  - deepseek-chat-hf
-  - deepseek-coder-hf
-  - deepseek-chat-acone
+  # - qwen-turbo-hf
+  # - qwen-max-hf
+  # - qwen-max-longcontext-hf
+  # - qwen-plus-hf
+  # - qwen-vl-max-hf
+  # - qwen-vl-plus-hf
+  # - qwen-v1-hf
+  # - qwen-v1-vision-hf
+  # - deepseek-chat
+
+  # - deepseek-chat-hf
+  # - deepseek-coder-hf
+  # - deepseek-chat-acone
   # - glm-3-turbo
   # - glm-4
   # - glm-4v
@@ -129,6 +130,8 @@ models:
   - !!python/tuple ['gemini-1.5-flash-k6', 'https://litellm.dattw.eu.org', 'any']
   - !!python/tuple ['gemini-1.5-pro-k7', 'https://litellm.dattw.eu.org', 'any']
   - !!python/tuple ['gemini-1.5-flash-k7', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-pro-k8', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash-k8', 'https://litellm.dattw.eu.org', 'any']
 
   - !!python/tuple ['gemini-1.5-pro', 'https://litellm.dattw.eu.org', 'any']
   - !!python/tuple ['gemini-1.5-flash', 'https://litellm.dattw.eu.org', 'any']
@@ -148,8 +151,30 @@ models:
   # - !!python/tuple ['gemini-1.5-flash-latest','https://api.sgai.cc','sk-Gcs0YNcfZYGPbR7uB6953c704dEc4580806b4f13052a99D5']
 
   # blackbox2api https://linux.do/t/topic/236936/178 https://mikeee-blackbox2api.hf.space/api/v1 316287378
+  # allowed modesl:gpt-4o, gemini-1.5-pro, claude-3-5-sonnet, blackboxai, blackboxai-search
   - !!python/tuple ['gemini-1.5-pro', 'https://mikeee-blackbox2api.hf.space/api', '316287378']
 
+  - !!python/tuple ['gemini-1.5-pro', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-1.5-flash', 'https://litellm.dattw.eu.org', 'any']
+  - !!python/tuple ['gemini-2.0-flash-exp', 'https://litellm.dattw.eu.org', 'any']
+
   # new-api in acone, use gemini.dattw.eu.org (gemini reverse proxy)
-  - gemini-1.5-pro-dattw
-  - gemini-1.5-pro-dattw1
+  # - gemini-1.5-pro-dattw
+  # - gemini-1.5-pro-dattw1
+
+  # linuxdo resources
+  # - !!python/tuple ['deepseek-chat', 'https://deepseek.oeo.asia', 'sk-Meatbuns']
+  - !!python/tuple ['gpt-4o-mini', 'https://free.v36.cm', 'sk-Sn7zxGMWK5Ejj2Gk8f9c0550EeCd44Cc86835cCcB42aEb5a']
+  # - !!python/tuple ['Qwen/QwQ-32B-Preview', 'http://api.888188.me', 'sk-566ef04ac31a0d624bd3db7f065b6a97f40f7d2316113847']
+
+  # - !!python/tuple ['gpt-4o-mini', 'https://2api.hsingjui.eu.org/blackbox', 'sk-a6f0ebae70dee2f9e1ed37dfc1d2d9d4']
+  # - !!python/tuple ['gpt-4', 'https://2api.hsingjui.eu.org/blackbox', 'sk-a6f0ebae70dee2f9e1ed37dfc1d2d9d4']
+  # - !!python/tuple ['gemini-pro', 'https://2api.hsingjui.eu.org/blackbox', 'sk-a6f0ebae70dee2f9e1ed37dfc1d2d9d4']
+
+  # curl-url-key.bat  https://free.op414.com/v1 sk-114514 Qwen/QwQ-32B-Preview
+  # too verbose - !!python/tuple ['Qwen/QwQ-32B-Preview', 'https://free.op414.com', 'sk-114514']
+  - !!python/tuple ['deepseek-chat', 'https://free.op414.com', 'sk-114514']
+
+  # ddg
+  - !!python/tuple ['gpt-4o-mini', 'https://mikeee-ddg-chat.hf.space/hf', 'any']
+  - !!python/tuple ['gpt-4o-mini', 'https://leafmoes-ddg-chat.hf.space/bbl', 'any']

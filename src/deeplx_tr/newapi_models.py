@@ -5,6 +5,7 @@ Use from pkgutil import resolve_name
 resolve_name("newapi_models:newapi_models")
 
 """
+
 from pathlib import Path
 
 import diskcache
@@ -40,14 +41,16 @@ models = [
 ]
 
 # redteam qwen hf
-models += ['qwen-turbo-hf',
- 'qwen-max-hf',
- 'qwen-max-longcontext-hf',
- 'qwen-plus-hf',
- 'qwen-vl-max-hf',
- 'qwen-vl-plus-hf',
- 'qwen-v1-hf',
- 'qwen-v1-vision-hf']
+models += [
+    "qwen-turbo-hf",
+    "qwen-max-hf",
+    "qwen-max-longcontext-hf",
+    "qwen-plus-hf",
+    "qwen-vl-max-hf",
+    "qwen-vl-plus-hf",
+    "qwen-v1-hf",
+    "qwen-v1-vision-hf",
+]
 
 # curl -XPOST https://mikeee-reka.hf.space/hf/v1/chat/completions -H "Authorization: Bearer 316287378"  -H "Content-Type: application/json" --data "{\"model\": \"reka-core\", \"messages\": [{\"role\": \"user\", \"content\": \"Say this is a test!\"}]}"
 # newapi at acone via mikeee-reka.hf.space free reka.ai
@@ -97,7 +100,7 @@ models += [
 # groq2api acone:3006
 models += [
     "llama3-70b-8192-groq",
-    "mixtral-8x7b-32768-groq"
+    "mixtral-8x7b-32768-groq",
     # 'llama3-8b-8192-groq',
     # 'gemma-7b-it-groq',
 ]

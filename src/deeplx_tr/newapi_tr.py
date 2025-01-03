@@ -145,4 +145,4 @@ TEXT: {text}"""
         logger.trace(exc)
         raise
 
-    return trtext
+    return trtext.strip()

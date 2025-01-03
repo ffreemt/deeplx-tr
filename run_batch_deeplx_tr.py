@@ -1,12 +1,13 @@
+"""Run batch deeplx_tr."""
+
 import asyncio
-from time import monotonic
 import datetime
 from contextlib import suppress
+from time import monotonic
 
-from loguru import logger
+from deeplx_tr.batch_deeplx_tr import DEQ, batch_deeplx_tr
 from loadtext import loadtext
-
-from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr, DEQ
+from loguru import logger
 from ycecream import y
 
 # turn ycecream off
@@ -26,10 +27,11 @@ y(DEQ, o=logger.info)
 # texts = loadtext(r'C:\syncthing\00xfer\2021it\2024-05-21.txt', splitlines=1)
 # texts = loadtext(r'C:\syncthing\00xfer\2021it\2024-05-28.txt', splitlines=1)
 
-texts = loadtext(r'C:\syncthing\00xfer\2021it\2024-05-30.txt', splitlines=1)
+texts = loadtext(r"C:\syncthing\00xfer\2021it\2024-05-30.txt", splitlines=1)
 
 today = f"{datetime.date.today()}"
-with suppress(Exception): texts = loadtext(rf'C:\syncthing\00xfer\2021it\{today}.txt', splitlines=1)
+with suppress(Exception):
+    texts = loadtext(rf"C:\syncthing\00xfer\2021it\{today}.txt", splitlines=1)
 
 # texts = 5 * texts
 # texts = 10 * texts
@@ -89,6 +91,6 @@ _ = asyncio.run(batch_deeplx_tr(texts, n_workers=n_workers))
 
 # print('[int(isinstance(elm, Exception)) for elm in _])', [int(isinstance(elm, Exception)) for elm in _])
 
-print('\n\n'.join( f"{seqno}: {text}" for seqno, text in sorted(_, key=lambda x: x[0])))
+print("\n\n".join(f"{seqno}: {text}" for seqno, text in sorted(_, key=lambda x: x[0])))
 
 print(f"{n_workers=} {len(DEQ)=}, {len(_)=}, {len(texts)=}, {monotonic() - then: .1f}s")

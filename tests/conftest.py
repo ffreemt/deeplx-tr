@@ -1,8 +1,7 @@
+"""Config pytest."""
+
 # pylint: disable=unused-argument, missing-module-docstring, missing-function-docstring
-import asyncio
 import os  # noqa
-import pytest
-from time import sleep
 from python_run_cmd import run_cmd  # noqa
 from ycecream import y
 
@@ -18,6 +17,8 @@ def pytest_sessionfinish(session, exitstatus):
     # ugly hack, pytest wont print "n passed" etc
     # y(f"taskkill /f /pid {os.getpid()}")
     # run_cmd(f"taskkill /f /pid {os.getpid()}")
+
+
 # '''
 
 _ = """
@@ -34,7 +35,7 @@ def configure_event_loop():
 # """
 
 # https://stackoverflow.com/questions/61022713/pytest-asyncio-has-a-closed-event-loop-but-only-when-running-all-tests
-_= """
+_ = """
 @pytest.fixture(scope="session")
 def event_loop():
     try:

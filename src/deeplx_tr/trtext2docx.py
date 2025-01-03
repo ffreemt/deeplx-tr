@@ -36,7 +36,7 @@ def trtext2docx(
     source_text: Union[None, List[str], str] = None,
     trtext: Union[None, List[str], str] = None,
     alt_text: Union[None, List[str], str] = None,
-    outfile: str  = "",
+    outfile: str = "",
     openfile: bool = True,
 ):
     """
@@ -83,7 +83,7 @@ def trtext2docx(
     # Normal style: built-in
     # document.styles["Normal"].font.name = "宋体"  # type: ignore
     # document.styles["Normal"].font.highlight_color = WD_COLOR_INDEX.YELLOW  # type: ignore
-    document.styles['Normal'].font.size = Pt(12)
+    document.styles["Normal"].font.size = Pt(12)
     document.styles["Normal"].paragraph_format.line_spacing = Pt(0)  # type: ignore
 
     # SrctextStyle
@@ -156,7 +156,9 @@ async def main():  # pylint: disable=missing-function-docstring
             filepath = todayfile
             texts = loadtext(filepath)
         else:
-            console.print("[white on #F47983] No task today![/white on #F47983] set is_test = True for dev work")
+            console.print(
+                "[white on #F47983] No task today![/white on #F47983] set is_test = True for dev work"
+            )
             # raise SystemExit(1)
             return None
 

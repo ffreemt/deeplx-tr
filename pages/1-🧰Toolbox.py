@@ -1,7 +1,8 @@
+"""Define Toolbox tab."""
+
 import streamlit as st
-import time
-import numpy as np
 from box import Box
+from deeplx_tr.color_diff import color_diff
 from langchain_openai import ChatOpenAI
 from lmtr_agents import (
     agent_imp,
@@ -9,7 +10,6 @@ from lmtr_agents import (
     agent_ref,
 )
 from loguru import logger
-from deeplx_tr.color_diff import color_diff, plussign_diff
 
 llm = ChatOpenAI(
     base_url="https://litellm.dattw.eu.org/v1",
@@ -18,12 +18,12 @@ llm = ChatOpenAI(
     # model="deepseek-chat",
     model="gemini-1.5-pro",
 )
-# llm.invoke("Enbrace什么意思")
+# llm.invoke("Enbrace 什么意思")
 st.set_page_config(page_title="Translate Agents", page_icon="🧰")
 
 sstate = st.session_state
-if "ns" not in st.session_state:
-    st.session_state["ns"] = Box()
+if "ns" not in sstate:
+    sstate["ns"] = Box()
 
 if sstate.ns.get("text") is None:
     sstate.ns.text = [""]
@@ -53,7 +53,7 @@ len_ = len(sstate.ns.text)
 if len_ < 2:
     range_ = [0, 1]
 else:
-    range_ = [elm for elm  in range(len(sstate.ns.text))]
+    range_ = [elm for elm in range(len(sstate.ns.text))]
 
 if sstate.ns.filename == "temp.txt":
     placeholder.write("no file loaded, load a file first in 🌐Translate")
@@ -94,11 +94,11 @@ with row_text[0]:
 if 0 <= sn < len_:
     # para_text.write(f"{sn}, {sstate.ns.text[sn]}")
     para_text.write(
-        sstate.ns.text[sn] +
-        "\n\n" +
-        sstate.ns.dxtext[sn] +
-        "\n\n" +
-        sstate.ns.lmtext[sn]
+        sstate.ns.text[sn]
+        + "\n\n"
+        + sstate.ns.dxtext[sn]
+        + "\n\n"
+        + sstate.ns.lmtext[sn]
     )
     sstate.ns.sn = sn
 

@@ -1,7 +1,7 @@
 """
-Translate via newapi api.
+Translate via llm (openai/litellm) api.
 
-also azure openai
+cf batch_newapi_tr
 
 """
 # pylint: disable=too-many-statements, too-many-branches, too-many-arguments
@@ -21,8 +21,8 @@ from loguru import logger
 # from openai import OpenAI, AzureOpenAI
 from ycecream import y
 
-# from deeplx_tr.newapi_models import newapi_models
-from deeplx_tr.newapi_tr import newapi_tr
+# from deeplx_tr.newapi_tr import newapi_tr
+from deeplx_tr.llm_tr import llm_tr
 
 y.configure(sln=1, rn=1)
 
@@ -40,19 +40,11 @@ try:
         _ = []
 except:  # noqa  # pylint: disable=bare-except
     _ = []
-# DEQ = deque(_)
-# DEQ = deque(newapi_models)
-# DEQ = deque(newapi_models[:10])
 
-# models = newapi_models[-10:]
-# MODELS = newapi_models[:]
-
-# DEQ = deque(newapi_models)
-
-newapi_models = yaml.load(Path("model-list.yml").read_text(), Loader=yaml.Loader).get(
+llm_models = yaml.load(Path("model-list.yml").read_text(), Loader=yaml.Loader).get(
     "models"
 )
-DEQ = deque(newapi_models)
+DEQ = deque(llm_models)
 
 y(DEQ, len(DEQ))
 
@@ -163,15 +155,15 @@ async def worker(
         logger.trace(f" {model=}")
         logger.trace(f" {text=}")
 
-        # translate using async newapi_tr
+        # translate using async llm_tr
         try:
-            logger.trace(f" try newapi_tr {text=} {wid=}")
-            # trtext = await newapi_tr(text, model=model)
-            trtext = await newapi_tr(
-                text, model=model, base_url=base_url, api_key=api_key
+            logger.trace(f" try llm_tr {text=} {wid=}")
+            # trtext = await llm_tr(text, llm_model=model)
+            trtext = await llm_tr(
+                text, llm_model=model, base_url=base_url, api_key=api_key
             )
 
-            logger.trace(f" done newapi_tr {text=} {wid=}")
+            logger.trace(f" done llm_tr {text=} {wid=}")
         except Exception as exc:  # pylint: disable=broad-except
             logger.trace(f"{exc=}, {wid=}")
             trtext = exc  # for retry in the subsequent round
@@ -236,7 +228,7 @@ async def worker(
     return trtext_list
 
 
-async def batch_newapi_tr(
+async def batch_llm_tr(
     texts: List[str], n_workers: int = 4, model_suffix: bool = True
 ):
     """
@@ -328,7 +320,7 @@ async def main():
     manufacturing process."
 
     then_ = monotonic()
-    # coros = [newapi_tr(text), newapi_tr(text, temperature=0.35)] * 4
+    # coros = [llm_tr(text), llm_tr(text, temperature=0.35)] * 4
 
     # https://linux.do/t/topic/97173
     models = [
@@ -379,7 +371,7 @@ async def main():
     # models = ["gpt-4o-pzero", "gpt-3.5-turbo-pzero"]
     # models = ['gpt-4-turbo-2024-04-09-furry', 'gpt-4o-furry', 'gpt-3.5-turbo-furry']
 
-    coros = [newapi_tr(text, model=model) for model in models]
+    coros = [llm_tr(text, llm_model=model) for model in models]
 
     trtexts = await asyncio.gather(*coros, return_exceptions=True)
 
@@ -406,7 +398,7 @@ if __name__ == "__main__":
         texts_list = loadtext(rf"C:\syncthing\00xfer\2021it\{today}.txt", splitlines=1)
     # """
 
-    # _ = asyncio.run(batch_newapi_tr(["test 123", "test abc "]))
+    # _ = asyncio.run(batch_llm_tr(["test 123", "test abc "]))
 
     then_1 = monotonic()
 
@@ -415,7 +407,7 @@ if __name__ == "__main__":
     y(_)
 
     texts_list = asyncio.run(
-        batch_newapi_tr(
+        batch_llm_tr(
             texts_list,
             n_workers=30,  # default 4
         ),
@@ -445,6 +437,6 @@ if __name__ == "__main__":
     print(f"{'model':<28}:", ["success", "failure", "empty"])
     # y(f"{'model':<28}:", ["success", "failure", "empty"])
     # for model_, _ in zip(MODELS, stats):
-    for model_, _ in zip(newapi_models, stats):
+    for model_, _ in zip(llm_models, stats):
         # print(f"{model_:<28}:", _)
         print(_, model_)

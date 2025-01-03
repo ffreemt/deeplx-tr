@@ -150,3 +150,8 @@ tests-backup
 quick-test-newapi_tr.bat
 quick_run.py
 .sesskey
+copy-1.bat
+Translate-bk.py
+run-Translate.bat
+run-Translate-bk.bat
+model-list.yml

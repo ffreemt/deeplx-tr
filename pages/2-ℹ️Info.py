@@ -1,3 +1,5 @@
+"""Define Info tab."""
+
 import streamlit as st
 
 st.set_page_config(page_title="Plotting Demoℹ️", page_icon="ℹ️")

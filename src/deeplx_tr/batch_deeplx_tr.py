@@ -6,6 +6,7 @@ cache = diskcache.Cache(Path.home() / ".diskcache" / "deeplx-sites")
 # reverse, prepare for deq[-1] and deq.rotate
 deq = deque([url for url, deplay in cache.get("deeplx-sites")[::-1]]
 """
+
 # pylint: disable=too-many-branches, too-many-statements
 import asyncio
 from collections import deque
@@ -16,7 +17,6 @@ from typing import List, Tuple, Union
 
 import diskcache
 from loguru import logger
-from ycecream import y
 
 from deeplx_tr.deeplx_client_async import deeplx_client_async
 
@@ -40,7 +40,10 @@ async def cache_incr(item, idx, inc=1):
 
 
 async def worker(
-    queue, deq, wid=-1, queue_tr=asyncio.Queue()
+    queue,
+    deq,
+    wid,
+    queue_tr,  # queue_tr=asyncio.Queue(): very subtle bug, need to provide queue_tr for multiple workers
 ) -> List[List[Union[str, BaseException]]]:
     """
     Translate text in the queue.
@@ -58,6 +61,7 @@ async def worker(
     # asign a random wid by default
     if wid < 0:
         randrange(1000)
+
     logger.trace(f"******** {wid=}")
     trtext_list = []
 
@@ -144,14 +148,27 @@ async def worker(
     # """
 
     then = monotonic()
+    logger.trace("start while loop")
     while True:
-        # test timeout realy exit
+        # logger.trace(f"\t {wid=} in while loop")
+        # test timeout really exit
         # if monotonic() - then > 1: break
 
         # break based on len(trtext_list) and time
         # if len(trtext_list) >= n_texts or monotonic() - then > 30 * n_texts:
+
+        # logger.trace(f"{queue_tr.qsize()=}")
+        # logger.trace(f"{n_texts=}")
+
+        # logger.trace(f"break: {queue_tr.qsize() >= n_texts or monotonic() - then > 30 * n_texts}")
+
+        # break based on queue_tr.size() and time
         if queue_tr.qsize() >= n_texts or monotonic() - then > 30 * n_texts:
+            if monotonic() - then > 30 * n_texts:
+                logger.warning(f"timed out: 30 * {n_texts=}")
             break
+
+        # logger.trace("in while loop, after 'break' ")
 
         try:
             seqno_text = queue.get_nowait()
@@ -224,7 +241,9 @@ async def worker(
     return trtext_list
 
 
-async def batch_deeplx_tr(texts: List[str], n_workers: int = 4) -> List[Tuple[int, str]]:
+async def batch_deeplx_tr(
+    texts: List[str], n_workers: int = 4
+) -> List[Tuple[int, str]]:
     """
     Translate in batch using urls from deq.
 
@@ -250,14 +269,14 @@ async def batch_deeplx_tr(texts: List[str], n_workers: int = 4) -> List[Tuple[in
     if n_workers == 0:
         n_workers = len(texts)
     elif n_workers < 0:
-        n_workers = len(texts) // 2
+        n_workers = min(1, len(texts) // 2)
 
     # cap to len(texts)
     n_workers = min(n_workers, len(texts))
 
     logger.info(f"{n_workers=}")
 
-    logger.debug(y(n_workers))
+    # logger.debug(y(n_workers))
 
     que = asyncio.Queue()
     for idx, text in enumerate(texts):
@@ -280,7 +299,12 @@ async def batch_deeplx_tr(texts: List[str], n_workers: int = 4) -> List[Tuple[in
     cache.set("workers_fail", [0] * n_workers)
     cache.set("workers_emp", [0] * n_workers)
 
-    tasks = [asyncio.create_task(worker(que, DEQ, _)) for _ in range(n_workers)]
+    # worker(que, deq, worker_id, queue_tr)
+
+    queue_tr = asyncio.Queue()
+    tasks = [
+        asyncio.create_task(worker(que, DEQ, _, queue_tr)) for _ in range(n_workers)
+    ]
 
     # no longer needed since we exit only when len(trtexts) >= len(texts) or timeout
     # await que.join()  # queue.task_done() for each task to properly exit
@@ -310,6 +334,7 @@ async def batch_deeplx_tr(texts: List[str], n_workers: int = 4) -> List[Tuple[in
 
     # trtext_list can be asyncio.CancelledError in which case
 
+    # combine results from serveral workers
     trtext_list1 = []
     for _ in trtext_list:
         trtext_list1.extend(_)  # type: ignore
@@ -326,3 +351,8 @@ async def batch_deeplx_tr(texts: List[str], n_workers: int = 4) -> List[Tuple[in
 if __name__ == "__main__":
     _ = asyncio.run(batch_deeplx_tr(["test 123", "test abc "]))
     print(_)
+
+    # rerun bug
+    _ = asyncio.run(batch_deeplx_tr(["test 123", "test abc "]))
+    print(_)
+    assert _, "Rerun bug: TODO"

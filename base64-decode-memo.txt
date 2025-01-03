@@ -1,0 +1,5 @@
+https://linux.do/t/topic/268599
+
+https://fofa.me/
+In [527]: base64.b64decode('5Ye75YmRMXYx').decode('utf-8')
+Out[527]: '击剑1v1'
