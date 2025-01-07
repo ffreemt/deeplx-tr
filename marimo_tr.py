@@ -250,7 +250,7 @@ def _(
     # ns.docx_file = Path(r'C:\Users\User\Documents\111.docx').read_bytes()
     # _ = f'{Path(ns.filename).stem}-tr.docx'
     try:
-        filename_ = f'{Path(ns.filename).stem}-tr.docx'
+        filename_ = f'{Path(ns.filename).stem}.docx'
         ns.filename = filename_
     except Exception as e:
         logger.error(e)
@@ -417,11 +417,10 @@ def _(get_model, mo, set_model):
 
 @app.cell
 def _(dropdown_model_sel, mo, ns, oai, y):
-
     def my_model(messages, config):
         question = messages[-1].content
         y(question)
-        
+
         # Search for relevant docs in a vector database, blog storage, etc.
         # docs = find_relevant_docs(question)
         # context = "\n".join(docs)
@@ -449,14 +448,15 @@ def _(dropdown_model_sel, mo, ns, oai, y):
               prompts=[
                 "{{phrase}} 什么意思，怎么翻译",
                 "列出 {{phrase}} 的 5 个中文同义词", 
-                  "根据原文和dx译文给出修改后的翻译，用黑体标出修改过的部分",
-                  "根据原文和lm译文给出修改后的翻译",
-                  "根据原文和dx译文及lm译文给出修改后的翻译",
+                  "{{text}} 翻成中文",
+                  "根据原文和dx译文给出修改后的翻译，用黑体标出新增加的文字",
+                  "根据原文和lm译文给出修改后的翻译，用黑体标出新增加的文字",
+                  "根据原文和dx译文及lm译文给出修改后的翻译，用黑体标出新增加的文字",
                   "根据原文和dx译文提出修改dx译文的建议",
-                  "根据原文和dx译文提出修改dx译文的建议并给出修改后的翻译，用黑体标出修改过的部分",
+                  "根据原文和dx译文提出修改dx译文的建议并给出修改后的翻译，用黑体标出新增加的文字",
                   "根据原文和lm译文提出修改lm译文的建议",
-                  "根据原文和lm译文提出修改lm译文的建议并给出修改后的翻译，用黑体标出修改过的部分",
-                  "根据原文和dx译文及lm译文提出修改建议并给出修改后的翻译，用黑体标出修改过的部分",
+                  "根据原文和lm译文提出修改lm译文的建议并给出修改后的翻译，用黑体标出新增加的文字",
+                  "根据原文和dx译文及lm译文提出修改建议并给出修改后的翻译，用黑体标出新增加的文字",
                 "Say this is a test.",  
               ],
               show_configuration_controls=True,
