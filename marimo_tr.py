@@ -195,8 +195,18 @@ def _(logger, ns, row1, set_state):
     return (set_row_numb,)
 
 
-@app.cell
-def _(columns, fileobj, ns, pd, set_state, set_tot, y, zip_longest):
+app._unparsable_cell(
+    r"""
+    — = \"\"\" pandas.read_csv
+    import tempfile
+
+    with tempfile.NamedTemporaryFile(delete=False)
+     as temp_file:
+        temp_file.write(bytes_c)
+        temp_file_path = temp_file.name
+    pd.read_csv(temp_file_path, header=None, index=None)
+
+    \"\"\"
     if fileobj.contents():
         lines = []
         try:
@@ -214,7 +224,9 @@ def _(columns, fileobj, ns, pd, set_state, set_tot, y, zip_longest):
         ns.row_numb = 0
         set_state(ns.row_numb)
         set_tot(ns.row_tot)
-    return (lines,)
+    """,
+    name="_"
+)
 
 
 @app.cell
