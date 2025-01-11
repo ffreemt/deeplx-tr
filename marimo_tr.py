@@ -195,9 +195,9 @@ def _(logger, ns, row1, set_state):
     return (set_row_numb,)
 
 
-app._unparsable_cell(
-    r"""
-    — = \"\"\" pandas.read_csv
+@app.cell
+def _(columns, fileobj, ns, pd, set_state, set_tot, y, zip_longest):
+    _ = """ pandas.read_csv
     import tempfile
 
     with tempfile.NamedTemporaryFile(delete=False)
@@ -206,7 +206,7 @@ app._unparsable_cell(
         temp_file_path = temp_file.name
     pd.read_csv(temp_file_path, header=None, index=None)
 
-    \"\"\"
+    """
     if fileobj.contents():
         lines = []
         try:
@@ -224,9 +224,7 @@ app._unparsable_cell(
         ns.row_numb = 0
         set_state(ns.row_numb)
         set_tot(ns.row_tot)
-    """,
-    name="_"
-)
+    return (lines,)
 
 
 @app.cell
@@ -324,7 +322,12 @@ def _(mo):
         [
             # mo.md("## Info"),
             mo.md(
-                """* 🐧 Join qqgroup 316287378 for updates and/or realtime chat.
+                """
+                * 👉 Workflow
+                    - Upload a text file or a 1-3 column csv (TODO)
+                    - In case of a text file, click the dxtr button to translate the text to Chinese via deeplx, lmtr button via llm, optionally download a docx file
+                    - Switch to the Llmtool tab and select a paragraph using the slider. Chat with the bot. The corresponding paragraph serves as context (click ... in the up-right corner then select `Show code` for details).
+                * 🐧 Join qqgroup 316287378 for updates and/or realtime chat.
                 * ֎🇦🇮 If you have a  linux.do account, you may wish to check 
                 this out: 
                 [https://horizon.dattw.eu.org](https://horizon.dattw.eu.org) 
