@@ -34,6 +34,8 @@ dependencies = [
     "sentry-sdk[fastapi]>=2.17.0",
     "marimo>=0.10.9",
     "unsync>=1.4.0",
+    "langchain-community>=0.2.17",
+    "tavily-python>=0.5.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.10"
@@ -79,8 +81,12 @@ testpaths = [
 
 [tool.uv]
 dev-dependencies = [
+    "pip>=24.3.1",
     "pytest-asyncio>=0.24.0",
     "pytest-timeout>=2.3.1",
     "pytest>=8.3.4",
     "python-run-cmd>=0.1.1",
 ]
+
+# [tool.pyright]
+# pythonVersion = "3.10"

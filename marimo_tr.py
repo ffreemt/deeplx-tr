@@ -15,6 +15,7 @@ def _():
     import asyncio
     from itertools import zip_longest
     import io
+    import re
     from pathlib import Path
     from time import sleep
     from types import SimpleNamespace
@@ -32,6 +33,7 @@ def _():
     from deeplx_tr.batch_deeplx_tr import batch_deeplx_tr
     from deeplx_tr.batch_newapi_tr import batch_newapi_tr
     from deeplx_tr.trtext2docx import trtext2docx
+    from deeplx_tr.search_net import search_net, searx_search
     return (
         Path,
         SimpleNamespace,
@@ -43,6 +45,9 @@ def _():
         mo,
         np,
         pd,
+        re,
+        search_net,
+        searx_search,
         sleep,
         trtext2docx,
         unsync,
@@ -60,6 +65,8 @@ def _(
     io,
     mo,
     pd,
+    re,
+    search_net,
     trtext2docx,
     unsync,
     zip_longest,
@@ -144,6 +151,73 @@ def _(
             ...
         ...
 
+
+    def search_text():
+        for _ in mo.status.progress_bar(
+            range(1),
+            title="diggin text ...",
+            completion_title="done text",
+            # subtitle="wait...",
+            # show_eta=True,
+            # show_rate=True,
+            remove_on_exit=True,
+        ):
+            try:
+                q = '爱立信推出Aduna：统一网络API风险投资'
+                q = ns.text[ns.row_numb]
+                _ = search_net(q)
+            except Exception as e:
+                _ = '-- you need to upload a file and move the slider to pick a paragraph with at least 2 chars first'
+                _ = _ if "query too short" in str(e) else ""
+                _ = [{'traceback': f'{str(e)} {_}'}]
+
+            ns.l_dict = _
+
+    def search_dxtext():
+        for _ in mo.status.progress_bar(
+            range(1),
+            title="diggin dxtext ...",
+            completion_title="done dxtext",
+            # subtitle="wait...",
+            # show_eta=True,
+            # show_rate=True,
+            remove_on_exit=True,
+        ):
+            try:
+                q = ns.dxtext[ns.row_numb]
+                _ = search_net(q)
+            except Exception as e:
+                _ = '-- you need to upload a file and move the slider to pick a paragraph with at least 2 chars first'
+                _ = _ if "query too short" in str(e) else ""
+                _ = [{'traceback': f'{str(e)} {_}'}]
+
+            ns.l_dict = _
+
+
+    def search_lmtext():
+        for _ in mo.status.progress_bar(
+            range(1),
+            title="diggin lmtext ...",
+            completion_title="done lmtext",
+            # subtitle="wait...",
+            # show_eta=True,
+            # show_rate=True,
+            remove_on_exit=True,
+        ):
+            try:
+                q = ns.lmtext[ns.row_numb]
+                # remove last square brackets (mode name)
+                q = re.sub(r'\[[^]]*\]\s*$', '', q)
+                _ = search_net(q)
+            except Exception as e:
+                _ = '-- you need to upload a file and move the slider to pick a paragraph with at least 2 chars first'
+                _ = _ if "query too short" in str(e) else ""
+                _ = [{'traceback': f'{str(e)} {_}'}]
+
+            ns.l_dict = _
+            
+
+    C_LIST = ["title", "url", "content", ]
     ns.text = ['']
     ns.dxtext = ['']
     ns.lmtext = ['']
@@ -151,9 +225,23 @@ def _(
     ns.filename = 'temp-marimo.txt'
     ns.df = pd.DataFrame([*zip_longest(ns.text, ns.dxtext, ns.lmtext, fillvalue='')], columns=columns)
 
+    ns.l_dict = [{}]
+    ns.l_dict = [dict(zip_longest(C_LIST, [''] * 3))]  # for search result
+
     ns.row_tot = 1
     ns.row_numb = 0
-    return columns, fileobj, gen_dxtext, gen_lmtext, ns, reset_pbar
+    return (
+        C_LIST,
+        columns,
+        fileobj,
+        gen_dxtext,
+        gen_lmtext,
+        ns,
+        reset_pbar,
+        search_dxtext,
+        search_lmtext,
+        search_text,
+    )
 
 
 @app.cell
@@ -233,6 +321,9 @@ def _(
     button_dx,
     button_lm,
     button_reset_pbar,
+    button_search_dxtext,
+    button_search_lmtext,
+    button_search_text,
     fileobj,
     get_state,
     get_tot,
@@ -292,16 +383,44 @@ def _(
                 # label='llm text'
             )
         }),
+        # bot,
     ])
 
     # _ = ns  # react to ns? to update lmtool_tab
 
+    _ = "爱立信推出Aduna：统一网络API风险投资"
+
+    # res = search_net(_)
+    # res = searx_search(_)
+
     lmtool_tab = mo.vstack(
         [
-            slider_row_numb,
+            mo.hstack(
+                [
+                    slider_row_numb, 
+                    button_search_text, 
+                    mo.vstack([button_search_dxtext, button_search_lmtext])
+                ], 
+                widths=[4, 1, 1],
+                # [slider_row_numb, mo.vstack([
+                #     button_dx, 
+                #     button_lm, 
+                #     # button_lm,
+                # ])],
+                # widths=[1, 1],
+                align='start',
+            ),
             row1,
             row2,
             row3,
+            mo.accordion({
+                '...':  mo.ui.table(
+                    ns.l_dict,
+                    selection=None,  # 'single',  # 'None,
+                    # wrapped_columns=C_LIST,
+                    page_size=3,
+                )
+            })
         ]
     )
     return button_dl, file_tab, filename_, lmtool_tab, slider_row_numb
@@ -326,13 +445,14 @@ def _(mo):
                 * 👉 Workflow
                     - Upload a text file or a 1-3 column csv (TODO)
                     - In case of a text file, click the dxtr button to translate the text to Chinese via deeplx, lmtr button via llm, optionally download a docx file
-                    - Switch to the Llmtool tab and select a paragraph using the slider. Chat with the bot. The corresponding paragraph serves as context (click ... in the up-right corner then select `Show code` for details).
-                * 🐧 Join qqgroup 316287378 for updates and/or realtime chat.
+                    - Switch to the Llmtool tab and select a paragraph using the slider. Chat with the bot. The corresponding paragraph serves as context (click ... in the up-right corner then select `Show code` for details). Or search the web with those 🌐 buttons
+                * 🐧 Join qqgroup 316287378 for updates and/or realtime chat
                 * ֎🇦🇮 If you have a  linux.do account, you may wish to check 
                 this out: 
                 [https://horizon.dattw.eu.org](https://horizon.dattw.eu.org) 
                 (a free service courtesy of yours sincerely)"""
             ),
+            # bot,
         ]
     )
 
@@ -370,7 +490,15 @@ def _(file_tab, info, lmtool_tab, mo):
 
 
 @app.cell
-def _(gen_dxtext, gen_lmtext, mo, reset_pbar):
+def _(
+    gen_dxtext,
+    gen_lmtext,
+    mo,
+    reset_pbar,
+    search_dxtext,
+    search_lmtext,
+    search_text,
+):
     button_dx = mo.ui.run_button(
         label='dxtr',
         kind='success',
@@ -391,7 +519,35 @@ def _(gen_dxtext, gen_lmtext, mo, reset_pbar):
         tooltip='click to remove progressbar',
         on_change=lambda _: reset_pbar()
     )
-    return button_dx, button_lm, button_reset_pbar
+
+    button_search_text =  mo.ui.run_button(
+        label='🌐 text',
+        kind='success',
+        tooltip='click to search text on the web',
+        on_change=lambda _: search_text()
+    )
+
+    button_search_dxtext =  mo.ui.run_button(
+        label='🌐 dxtext',
+        kind='success',
+        tooltip='click to search dxtext on the web',
+        on_change=lambda _: search_dxtext()
+    )
+
+    button_search_lmtext =  mo.ui.run_button(
+        label='🌐 lmtext',
+        kind='success',
+        tooltip='click to search lmtext on the web',
+        on_change=lambda _: search_lmtext()
+    )
+    return (
+        button_dx,
+        button_lm,
+        button_reset_pbar,
+        button_search_dxtext,
+        button_search_lmtext,
+        button_search_text,
+    )
 
 
 @app.cell
@@ -439,7 +595,7 @@ def _(dropdown_model_sel, mo, ns, oai, y):
         # Search for relevant docs in a vector database, blog storage, etc.
         # docs = find_relevant_docs(question)
         # context = "\n".join(docs)
-        # context = '''我叫老王。我来自北京'''
+        # context = '''我叫老x。我来自北京'''
         context = f'''
             <原文:>{ns.text[ns.row_numb]}</原文:> 
 
